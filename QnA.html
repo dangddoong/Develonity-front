@@ -27,6 +27,61 @@
   <body>
     <script>
       let questionCategory = "BACKEND";
+      let pageChoice = 1;
+      let sizeChoice = 5;
+      let isAscChoice = false;
+      function reloadQuestions() {
+        var settings = {
+          url: `http://localhost:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${questionCategory}`,
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            $("#boardList").empty();
+            for (i = 0; i < response.content.length; i++) {
+              $("#boardList").append(
+                `<div class="card w-100 p-3" onclick="choiceOneQuestion(${response.content[i].id})" style="width: max-content">
+                  <div class="card-header"></div>
+                  <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                      <p>
+                        ${response.content[i].title}
+                      </p>
+                      <span  style="display:none;">${response.content[i].id}</span>
+                      <footer class="blockquote-footer">
+                        nickname:  
+                        <cite title="Source Title">${response.content[i].nickname}</cite>
+                      </footer>
+                    </blockquote>
+                  </div>
+                </div>`
+              );
+            }
+          })
+          .fail(function (response) {
+            var settings2 = {
+              url: "http://localhost:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2).done(function (response) {
+              console.log(response);
+              localStorage.setItem("accessToken", response.accessToken);
+              localStorage.setItem("refreshToken", response.refreshToken);
+              location.reload;
+            });
+          });
+      }
     </script>
     <div class="site-wrap">
       <header class="site-navbar" role="banner">
@@ -137,7 +192,7 @@
               <div class="row">
                 <div class="col-md-12 mb-5">
                   <div class="float-md-left mb-4">
-                    <h2 class="text-black h5">게시물</h2>
+                    <h2 class="text-black h5" id="categoryNotice">Category</h2>
                   </div>
                   <div class="d-flex">
                     <div class="dropdown mr-1 ml-md-auto">
@@ -155,9 +210,15 @@
                         class="dropdown-menu"
                         aria-labelledby="dropdownMenuOffset"
                       >
-                        <a class="dropdown-item" href="#">5개</a>
-                        <a class="dropdown-item" href="#">10개</a>
-                        <a class="dropdown-item" href="#">20개</a>
+                        <a class="dropdown-item" onclick="pageSizeChoice(5)"
+                          >5개</a
+                        >
+                        <a class="dropdown-item" onclick="pageSizeChoice(10)"
+                          >10개</a
+                        >
+                        <a class="dropdown-item" onclick="pageSizeChoice(20)"
+                          >20개</a
+                        >
                       </div>
                     </div>
                     <div class="btn-group">
@@ -173,10 +234,10 @@
                         class="dropdown-menu"
                         aria-labelledby="dropdownMenuReference"
                       >
-                        <a class="dropdown-item" href="#">선긋기</a>
+                        <a class="dropdown-item" href="#">작성일자 기준</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">내림차순</a>
-                        <a class="dropdown-item" href="#">오름차순</a>
+                        <a class="dropdown-item" onclick="isAscOnclick(false)">내림차순</a>
+                        <a class="dropdown-item" onclick="isAscOnclick(true)"">오름차순</a>
                       </div>
                     </div>
                     <a href="boardWrite.html">
@@ -234,25 +295,25 @@
                 </h3>
                 <ul class="list-unstyled mb-0">
                   <li class="mb-1">
-                    <a href="#" class="d-flex"
+                    <a onclick="backendCategoryChoice()" class="d-flex"
                       ><span>BACKEND</span>
                       <span class="text-black ml-auto">(2,220)</span></a
                     >
                   </li>
                   <li class="mb-1">
-                    <a href="#" class="d-flex"
+                    <a onclick="frontCategoryChoice()" class="d-flex"
                       ><span>FRONTEND</span>
                       <span class="text-black ml-auto">(2,550)</span></a
                     >
                   </li>
                   <li class="mb-1">
-                    <a href="#" class="d-flex"
+                    <a onclick="aiCategoryChoice()" class="d-flex"
                       ><span>AI</span>
                       <span class="text-black ml-auto">(2,124)</span></a
                     >
                   </li>
                   <li class="mb-1">
-                    <a href="#" class="d-flex"
+                    <a onclick="dataScienceCategoryChoice()" class="d-flex"
                       ><span>DATA_SCIENCE</span>
                       <span class="text-black ml-auto">(2,124)</span></a
                     >
@@ -383,9 +444,49 @@
     <script src="js/aos.js"></script>
     <script src="js/main.js"></script>
     <script>
+      function backendCategoryChoice() {
+        questionCategory = "BACKEND";
+        $("#categoryNotice").text("BACKEND Category");
+        reloadQuestions();
+      }
+
+      function frontCategoryChoice() {
+        questionCategory = "FRONTEND";
+        $("#categoryNotice").text("FRONTEND Category");
+        reloadQuestions();
+      }
+
+      function aiCategoryChoice() {
+        questionCategory = "AI";
+        $("#categoryNotice").text("AI Category");
+        reloadQuestions();
+      }
+
+      function dataScienceCategoryChoice() {
+        questionCategory = "DATA_SCIENCE";
+        $("#categoryNotice").text("DATA_SCIENCE Category");
+        reloadQuestions();
+      }
+      function pageSizeChoice(sizeNumber) {
+        sizeChoice = sizeNumber;
+        console.log(sizeChoice);
+        reloadQuestions();
+      }
+      function isAscOnclick(isAsc){
+        isAscChoice = isAsc;
+        console.log(isAsc);
+        reloadQuestions();
+      }
+      function choiceOneQuestion(boardId){
+        console.log(boardId);
+        localStorage.setItem("boardId", String(boardId));
+        window.location = "getBoard.html";
+      }
+    </script>
+    <script>
       $(function () {
         var settings = {
-          url: `http://localhost:8080/api/question-boards?questionCategory=${questionCategory}&title=제`,
+          url: `http://localhost:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${localStorage.getItem("categoryChoice")}`,
           method: "GET",
           timeout: 0,
           headers: {
@@ -397,22 +498,25 @@
           .done(function (response) {
             console.log(response);
             $("#boardList").empty();
-            $("#boardList").append(
-              `<div class="card w-100 p-3" style="width: max-content">
-                  <div class="card-header">Quote</div>
+            for (i = 0; i < response.content.length; i++) {
+              $("#boardList").append(
+                `<div class="card w-100 p-3" onclick="choiceOneQuestion(${response.content[i].id})" style="width: max-content">
+                  <div class="card-header"></div>
                   <div class="card-body">
                     <blockquote class="blockquote mb-0">
                       <p>
-                        A well-known quote, contained in a blockquote element.
+                        ${response.content[i].title}
                       </p>
+                      <span style="display:none;">${response.content[i].id}</span>
                       <footer class="blockquote-footer">
-                        Someone famous in
-                        <cite title="Source Title">Source Title</cite>
+                        nickname:  
+                        <cite title="Source Title">${response.content[i].nickname}</cite>
                       </footer>
                     </blockquote>
                   </div>
                 </div>`
-            );
+              );
+            }
           })
           .fail(function (response) {
             var settings2 = {
@@ -428,7 +532,7 @@
               console.log(response);
               localStorage.setItem("accessToken", response.accessToken);
               localStorage.setItem("refreshToken", response.refreshToken);
-              location.reload;
+              location.reload(true);
             });
           });
       });

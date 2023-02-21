@@ -27,6 +27,10 @@
   <body>
     <script>
       let questionCategoryChoice = "BACKEND";
+      function commentUpdate(commentId) {}
+      function commentDelete(commentId) {}
+      function replyCommentUpdate(commentId, replyCommentId) {}
+      function replyCommentDelete(commentId, replyCommentId) {}
     </script>
     <script>
       function backendCategoryChoice() {
@@ -47,6 +51,85 @@
       function dataScienceCategoryChoice() {
         localStorage.setItem("categoryChoice", "DATA_SCIENCE");
         window.location = "QnA.html";
+      }
+
+      function replyCommentPost(commentId) {
+        var settings = {
+          url: `http://localhost:8080/api/comments?comment-id=${parseInt(
+            commentId
+          )}`,
+          method: "POST",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            content: $("#replyComment" + commentId).val(),
+          }),
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          reloadComments();
+        });
+      }
+
+      function reloadComments() {
+        var settings = {
+          url: `http://localhost:8080/api/comments/test?boardId=${parseInt(
+            localStorage.getItem("boardId")
+          )}&page=1&size=10`,
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response.content);
+          $("#commentLoadingPlace").empty();
+          $("#commentLoadingPlace").append(
+            `<div style="font-size: 30px; font-weight: bolder; margin-left:10%; margin-bottom: 10px;">
+                    댓글목록
+                  </div>`
+          );
+          for (i = 0; i < response.content.length; i++) {
+            $("#commentLoadingPlace").append(
+              `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentUpdate(${response.content[i].id})">댓글 수정</button>
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentDelete(${response.content[i].id})">댓글 삭제</button>
+                    </div>
+                  </div>`
+            );
+            for (j = 0; j < response.content[i].replyCommentList.length; j++) {
+              $("#commentLoadingPlace").append(
+                `<div class="card" style="width: 70%; margin-top:10px; margin-left:20%; color: black; ">
+                    <div class="card-header" >${response.content[i].replyCommentList[j].nickname} </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].replyCommentList[j].content}</li>
+                    </ul>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important;">
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentUpdate(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 수정</button>
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentDelete(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 삭제</button>
+                    </div>
+                  </div>`
+              );
+            }
+            $("#commentLoadingPlace").append(
+              `<input id = "replyComment${response.content[i].id}" style="width: 70%; margin-top:10px; margin-left:20%; type="text" Placeholder = "대댓글달기"/>
+                  <button style="width: 30%; margin-top:5px; margin-left:60%; " onclick="replyCommentPost(${response.content[i].id})">대댓글달기</button>
+                  <hr style="background-color:black;"/>`
+            );
+          }
+        });
       }
     </script>
     <div class="site-wrap">
@@ -159,7 +242,7 @@
                 <div class="col-md-12 mb-5">
                   <div class="float-md-left mb-4">
                     <h2 class="text-black h5" style="font-size: 30px">
-                      게시물 쓰기
+                      게시물 단건조회
                     </h2>
                   </div>
                 </div>
@@ -167,93 +250,64 @@
 
               <div class="row mb-5" id="boardList" style="display: block">
                 <!-- 보드 디자인 넣을 공간임. -->
-                <div class="btn-group">
-                  <button
-                    type="button"
-                    class="btn btn-secondary btn-sm dropdown-toggle"
-                    id="dropdownMenuReference"
-                    data-toggle="dropdown"
-                    style="margin-bottom: 10px"
-                  >
-                    Q&A 카테고리를 골라주세요
-                  </button>
+                <div class="card" id="boardCard">
+                  <div class="card-body">
+                    <h3 class="card-title">Card title</h3>
+                    <div>작성자 명</div>
+                    <p class="card-text">
+                      This is a wider card with supporting text below as a
+                      natural lead-in to additional content. This content is a
+                      little bit longer.
+                    </p>
+                    <p class="card-text">
+                      <small class="text-muted">Last updated 3 mins ago</small>
+                    </p>
+                  </div>
 
-                  <div
-                    class="dropdown-menu"
-                    aria-labelledby="dropdownMenuReference"
-                  >
-                    <a class="dropdown-item" onclick="backendCategory()"
-                      >BACKEND</a
-                    >
-                    <a class="dropdown-item" onclick="frontendCategory()"
-                      >FRONTEND</a
-                    >
-                    <a class="dropdown-item" onclick="aiCategory()">AI</a>
-                    <a class="dropdown-item" onclick="dataScienceCategory()"
-                      >DATA_SCIENCE</a
-                    >
+                  <img
+                    src="https://s3.ap-northeast-2.amazonaws.com/taewoong-test/board/questionImage/7fbcc882-ada3-4cc4-8609-cdb6ee622efb.jpg"
+                    style="max-width: 500px; max-height: 500px"
+                    class="card-img-bottom"
+                    alt="..."
+                  />
+                </div>
+                <div id="commentWritePlace" style="margin: 20px">
+                  <hr
+                    style="
+                      background-color: gray;
+                      height: 1px;
+                      margin-top: 50px;
+                    "
+                  />
+                  <div style="font-size: 30px; font-weight: bolder">
+                    댓글달기
+                  </div>
+                  <textarea
+                    class="form-control form-control-lg"
+                    id="commentContent"
+                    type="text"
+                    placeholder="댓글 내용을 작성해주세요"
+                    aria-label=".form-control-lg example"
+                  ></textarea>
+                  <button onclick="postComment()" style="margin-top: 10px">
+                    댓글 등록하기
+                  </button>
+                  <hr
+                    style="
+                      background-color: gray;
+                      height: 1px;
+                      margin-bottom: 50px;
+                    "
+                  />
+                </div>
+                <div id="commentLoadingPlace">
+                  <div class="card" style="width: 100%">
+                    <div class="card-header">댓글 작성자 닉네임</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">댓글내용</li>
+                    </ul>
                   </div>
                 </div>
-                <div id="pointChoice">
-                  <input
-                    type="text"
-                    class="w-100 p-3 form-control py-4"
-                    placeholder="답변 채택시 선물할 기프트포인트를 작성해주세요(현재포인트: )"
-                    style="width: 100% !important"
-                    id="dtoPoint"
-                  />
-                </div>
-
-                <div class="mb-3">
-                  <label
-                    for="exampleFormControlTextarea1"
-                    class="form-label"
-                    style="color: black; font-size: 30px"
-                    >제목</label
-                  >
-                  <textarea
-                    class="form-control"
-                    id="dtoTitle"
-                    rows="1"
-                  ></textarea>
-                </div>
-                <div class="mb-3">
-                  <label
-                    for="exampleFormControlTextarea1"
-                    class="form-label"
-                    style="color: black; font-size: 30px"
-                    >내용</label
-                  >
-                  <textarea
-                    class="form-control"
-                    id="dtoContent"
-                    rows="10"
-                  ></textarea>
-                </div>
-                <div class="mb-3">
-                  <label
-                    for="formFileMultiple"
-                    class="form-label"
-                    style="color: black; font-size: 20px"
-                    >이미지 첨부하기(여러개는 한번에 선택하고
-                    올리셔야야합니다.)</label
-                  >
-                  <!-- <form id="uploadForm"> -->
-                  <input
-                    class="form-control"
-                    type="file"
-                    id="uploadImagesForm"
-                    multiple
-                  />
-                  <!-- </form> -->
-                </div>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-lg"
-                  onclick="boardSubmit()"
-                >
-                  작성완료
-                </button>
               </div>
             </div>
 
@@ -432,6 +486,47 @@
         questionCategoryChoice = "DATA_SCIENCE";
         $("#dropdownMenuReference").text("DATA_SCIENCE");
       }
+      function postComment() {
+        console.log($("#commentContent").val());
+        var settings = {
+          url: `http://localhost:8080/api/question-comments?question-board-id=${parseInt(
+            localStorage.getItem("boardId")
+          )}`,
+          method: "POST",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            content: $("#commentContent").val(),
+          }),
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            document.getElementById("commentContent").value = "";
+            reloadComments();
+          })
+          .fail(function (response) {
+            console.log(response);
+            var settings2 = {
+              url: "http://localhost:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2).done(function (response) {
+              console.log(response);
+              localStorage.setItem("accessToken", response.accessToken);
+              localStorage.setItem("refreshToken", response.refreshToken);
+            });
+          });
+      }
 
       function boardSubmit() {
         // var form = $(`uploadForm`)[0];
@@ -476,7 +571,6 @@
         $.ajax(settings)
           .done(function (response) {
             console.log(response);
-            window.history.back();
           })
           .fail(function (response) {
             var settings2 = {
@@ -488,23 +582,21 @@
               },
             };
 
-            $.ajax(settings2)
-              .done(function (response) {
-                console.log(response);
-                localStorage.setItem("accessToken", response.accessToken);
-                localStorage.setItem("refreshToken", response.refreshToken);
-                alert("다시 작성완료 버튼을 눌러주세요");
-              })
-              .fail(function (response) {
-                window.location = "signUp.html";
-              });
+            $.ajax(settings2).done(function (response) {
+              console.log(response);
+              localStorage.setItem("accessToken", response.accessToken);
+              localStorage.setItem("refreshToken", response.refreshToken);
+              location.reload;
+            });
           });
       }
     </script>
     <script>
       $(function () {
         var settings = {
-          url: `http://localhost:8080/api/user/me/profile`,
+          url: `http://localhost:8080/api/question-boards/${parseInt(
+            localStorage.getItem("boardId")
+          )}`,
           method: "GET",
           timeout: 0,
           headers: {
@@ -515,16 +607,26 @@
         $.ajax(settings)
           .done(function (response) {
             console.log(response);
-            $("#pointChoice").empty();
-            $("#pointChoice").append(
-              `<input
-                      type="number"
-                      class="w-100 p-3 form-control py-4"
-                      placeholder= "답변 채택시 선물할 기프트포인트를 설정해주세요(현재포인트:  ${response.giftPoint}  )"
-                      style=" width:100% !important;"
-                      
-                    />`
+            $("#boardCard").empty();
+            $("#boardCard").append(
+              `<div class="card-body">
+                    <h3 class="card-title">${response.title}</h3>
+
+                    <p class="card-text">
+                      ${response.content}
+                    </p>
+                    <div>${response.nickname}</div>
+                    <p class="card-text">
+                      <small class="text-muted">좋아요 ${response.boardLike}</small>
+                    </p>
+                  </div>
+                </div>`
             );
+            for (i = 0; i < response.imagePaths.length; i++) {
+              $("#boardCard").append(
+                `<img src=${response.imagePaths[i]} style="width:500px; heigt:500px;/">`
+              );
+            }
           })
           .fail(function (response) {
             var settings2 = {
@@ -543,6 +645,63 @@
               location.reload(true);
             });
           });
+      });
+
+      $(function () {
+        var settings = {
+          url: `http://localhost:8080/api/comments/test?boardId=${parseInt(
+            localStorage.getItem("boardId")
+          )}&page=1&size=10`,
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response.content);
+          $("#commentLoadingPlace").empty();
+          $("#commentLoadingPlace").append(
+            `<div style="font-size: 30px; font-weight: bolder; margin-left:10%; margin-bottom: 10px;">
+                    댓글목록
+                  </div>`
+          );
+          for (i = 0; i < response.content.length; i++) {
+            $("#commentLoadingPlace").append(
+              `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentUpdate(${response.content[i].id})">댓글 수정</button>
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentDelete(${response.content[i].id})">댓글 삭제</button>
+                    </div>
+                  </div>`
+            );
+            for (j = 0; j < response.content[i].replyCommentList.length; j++) {
+              $("#commentLoadingPlace").append(
+                `<div class="card" style="width: 70%; margin-top:10px; margin-left:20%; color: black; ">
+                    <div class="card-header" >${response.content[i].replyCommentList[j].nickname} </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].replyCommentList[j].content}</li>
+                    </ul>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important;">
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentUpdate(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 수정</button>
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentDelete(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 삭제</button>
+                    </div>
+                  </div>`
+              );
+            }
+            $("#commentLoadingPlace").append(
+              `<input id = "replyComment${response.content[i].id}" style="width: 70%; margin-top:10px; margin-left:20%; type="text" Placeholder = "대댓글달기"/>
+                  <button style="width: 30%; margin-top:5px; margin-left:60%; " onclick="replyCommentPost(${response.content[i].id})">대댓글달기</button>
+                  <hr style="background-color:black;"/>`
+            );
+          }
+        });
       });
     </script>
   </body>
