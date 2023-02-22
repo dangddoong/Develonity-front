@@ -159,7 +159,7 @@
                 <div class="col-md-12 mb-5">
                   <div class="float-md-left mb-4">
                     <h2 class="text-black h5" style="font-size: 30px">
-                      게시물 쓰기
+                      게시물 수정
                     </h2>
                   </div>
                 </div>
@@ -450,7 +450,7 @@
         }
         const dtoTitle = $("#dtoTitle").val();
         const dtoContent = $("#dtoContent").val();
-        const dtoPoint = parseInt($("#dtoPoint").val());
+        const dtoPoint = $("#dtoPoint").val();
 
         const json = JSON.stringify({
           title: dtoTitle,
@@ -462,8 +462,10 @@
         const blob = new Blob([json], { type: "application/json" });
         form.append("request", blob);
         var settings = {
-          url: "http://localhost:8080/api/question-boards",
-          method: "POST",
+          url: `http://localhost:8080/api/question-boards/${localStorage.getItem(
+            "boardId"
+          )}`,
+          method: "PUT",
           timeout: 0,
           headers: {
             Authorization: localStorage.getItem("accessToken"),
@@ -505,7 +507,9 @@
     <script>
       $(function () {
         var settings = {
-          url: `http://localhost:8080/api/user/me/profile`,
+          url: `http://localhost:8080/api/question-boards/${parseInt(
+            localStorage.getItem("boardId")
+          )}`,
           method: "GET",
           timeout: 0,
           headers: {
@@ -516,16 +520,116 @@
         $.ajax(settings)
           .done(function (response) {
             console.log(response);
-            $("#pointChoice").empty();
-            $("#pointChoice").append(
-              `<input
-                      type="number"
-                      class="w-100 p-3 form-control py-4"
-                      placeholder= "답변 채택시 선물할 기프트포인트를 설정해주세요(현재포인트:  ${response.giftPoint}  )"
-                      style=" width:100% !important;"
-                      id="dtoPoint"
-                    />`
+            questionCategoryChoice = response.questionCategory;
+            $("#boardList").empty();
+            $("#boardList").append(
+              `
+              <div class="btn-group" style="display:block;">
+                <div style="margin-right: 20px; color: black;">게시판 카테고리 -->> 
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-sm dropdown-toggle"
+                    id="dropdownMenuReference"
+                    data-toggle="dropdown"
+                    style="margin-bottom: 10px"
+                  >
+                    ${response.questionCategory} 
+                  </button>
+                  
+
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuReference"
+                  >
+                    <a class="dropdown-item" onclick="backendCategory()"
+                      >BACKEND</a
+                    >
+                    <a class="dropdown-item" onclick="frontendCategory()"
+                      >FRONTEND</a
+                    >
+                    <a class="dropdown-item" onclick="aiCategory()">AI</a>
+                    <a class="dropdown-item" onclick="dataScienceCategory()"
+                      >DATA_SCIENCE</a
+                    >
+                  </div>
+                  </div>
+                  <br>
+                  <div style="margin-right: 20px; color: black; ">채택 기프트포인트(낙장불입 원칙에 의거하여 수정이 불가합니다.) </div>
+                </div>
+                <div id="pointChoice">
+                  <input
+                    type="text"
+                    class="w-100 p-3 form-control py-4"
+                    placeholder="답변 채택시 선물할 기프트포인트를 작성해주세요(현재포인트: )"
+                    style="width: 100% !important"
+                    id="dtoPoint"
+                    value=${parseInt(response.prizePoint)}
+                    readonly
+                  />
+                </div><br>
+
+                <div class="mb-3" >
+                  <label
+                    for="exampleFormControlTextarea1"
+                    class="form-label"
+                    style="color: black; font-size: 30px;"
+                    >제목</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="dtoTitle"
+                    rows="1"
+                  >${response.title}</textarea>
+                </div>
+                <div class="mb-3" id="contentsAndImages">
+                  <label
+                    for="exampleFormControlTextarea1"
+                    class="form-label"
+                    style="color: black; font-size: 30px"
+                    >내용</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="dtoContent"
+                    rows="10"
+                    style="margin-bottom: 20px;"
+                  >${response.content}</textarea>
+                </div>
+                
+                <div class="mb-3">
+                  <label
+                    for="formFileMultiple"
+                    class="form-label"
+                    style="color: black; font-size: 20px"
+                    >이미지 첨부하기(여러개는 한번에 선택하고
+                    올리셔야야합니다.)</label
+                  >
+                  <div style="font-size:15px; color: red;"> ++ 사진업로드를 안하시면 기존의 사진이 유지됩니다.  but 사진 업로드를 하나라도 하시면 기존의 사진이 날라갑니다..
+ </div>
+ <div style="font-size:15px; color: red;">사진을 추가하시려면 기존사진들을 포함해서 재등록 해주세요! 감사합니다^^</div>
+                  <!-- <form id="uploadForm"> -->
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="uploadImagesForm"
+                    multiple
+                  />
+                  <!-- </form> -->
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-lg"
+                  onclick="boardSubmit()"
+                >
+                  수정완료
+                </button>
+              </div>`
             );
+            for (i = 0; i < response.imagePaths.length; i++) {
+              $("#contentsAndImages").append(
+                `<img src=${response.imagePaths[i]} style="width:500px; heigt:500px;/">`
+              );
+            }
           })
           .fail(function (response) {
             var settings2 = {
@@ -545,6 +649,48 @@
             });
           });
       });
+      // $(function () {
+      //   var settings = {
+      //     url: `http://localhost:8080/api/user/me/profile`,
+      //     method: "GET",
+      //     timeout: 0,
+      //     headers: {
+      //       Authorization: localStorage.getItem("accessToken"),
+      //     },
+      //   };
+
+      //   $.ajax(settings)
+      //     .done(function (response) {
+      //       console.log(response);
+      //       $("#pointChoice").empty();
+      //       $("#pointChoice").append(
+      //         `<input
+      //                 type="number"
+      //                 class="w-100 p-3 form-control py-4"
+      //                 placeholder= "답변 채택시 선물할 기프트포인트를 설정해주세요(현재포인트:  ${response.giftPoint}  )"
+      //                 style=" width:100% !important;"
+
+      //               />`
+      //       );
+      //     })
+      //     .fail(function (response) {
+      //       var settings2 = {
+      //         url: "http://localhost:8080/api/reissue",
+      //         method: "POST",
+      //         timeout: 0,
+      //         headers: {
+      //           Refresh: localStorage.getItem("refreshToken"),
+      //         },
+      //       };
+
+      //       $.ajax(settings2).done(function (response) {
+      //         console.log(response);
+      //         localStorage.setItem("accessToken", response.accessToken);
+      //         localStorage.setItem("refreshToken", response.refreshToken);
+      //         location.reload(true);
+      //       });
+      //     });
+      // });
     </script>
   </body>
 </html>

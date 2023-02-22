@@ -389,7 +389,7 @@
         })
         .fail(function (response) {
           console.log(response);
-          alert(response.responseText);
+          // alert(response.responseText);
         });
     }
 
@@ -397,4 +397,9 @@
     secondForm.addEventListener("submit", (e) => e.preventDefault());
   </script>
   <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script>
+    $(function () {
+      container.classList.remove("right-panel-active");
+    });
+  </script>
 </html>

@@ -293,10 +293,10 @@
                 <h3 class="mb-3 h6 text-uppercase text-black d-block">
                   Q&A 카테고리
                 </h3>
-                <ul class="list-unstyled mb-0">
-                  <li class="mb-1">
-                    <a onclick="backendCategoryChoice()" class="d-flex"
-                      ><span>BACKEND</span>
+                <ul class="list-unstyled mb-0" style="cursor: pointer;" >
+                  <li class="mb-1" >
+                    <a onclick="backendCategoryChoice()" class="d-flex" 
+                      ><span >BACKEND</span>
                       <span class="text-black ml-auto">(2,220)</span></a
                     >
                   </li>
@@ -408,26 +408,7 @@
             </div>
           </div>
           <div class="row pt-5 mt-5 text-center">
-            <div class="col-md-12">
-              <p>
-                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                Copyright &copy;
-                <script
-                  data-cfasync="false"
-                  src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-                ></script>
-                <script>
-                  document.write(new Date().getFullYear());
-                </script>
-                All rights reserved | This template is made with
-                <i class="icon-heart" aria-hidden="true"></i> by
-                <a
-                  href="https://colorlib.com"
-                  target="_blank"
-                  class="text-primary"
-                  >Colorlib</a
-                >
-                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            
               </p>
             </div>
           </div>
@@ -485,8 +466,12 @@
     </script>
     <script>
       $(function () {
+        let categoryInLocalStorage = localStorage.getItem("categoryChoice")
+        if(categoryInLocalStorage == null){
+          categoryInLocalStorage = "BACKEND"
+        }
         var settings = {
-          url: `http://localhost:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${localStorage.getItem("categoryChoice")}`,
+          url: `http://localhost:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${categoryInLocalStorage}`,
           method: "GET",
           timeout: 0,
           headers: {

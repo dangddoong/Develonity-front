@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+
+      button {
+        /* 생략 */
+        margin: 0;
+        padding: 0.5rem 1rem;
+
+        font-family: "Noto Sans KR", sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+        text-align: center;
+        text-decoration: none;
+
+        display: inline-block;
+        width: auto;
+        cursor: pointer;
+
+        border: none;
+        border-radius: 4px;
+      }
+    </style>
     <title>Develonity</title>
     <meta charset="utf-8" />
     <meta
@@ -27,10 +51,214 @@
   <body>
     <script>
       let questionCategoryChoice = "BACKEND";
-      function commentUpdate(commentId) {}
-      function commentDelete(commentId) {}
-      function replyCommentUpdate(commentId, replyCommentId) {}
-      function replyCommentDelete(commentId, replyCommentId) {}
+
+      function commentUpdate(commentId) {
+        let commentContentId = "commentContent" + commentId;
+        let commentContent =
+          document.getElementById(commentContentId).innerHTML;
+        console.log(commentContent);
+        var newCommentContent = prompt(
+          "원하시는 내용으로 수정해주세요",
+          commentContent
+        );
+        var settings = {
+          url: `http://localhost:8080/api/question-comments/${parseInt(
+            commentId
+          )}`,
+          method: "PUT",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            content: newCommentContent,
+          }),
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          reloadComments();
+        });
+      }
+      function commentDelete(commentId) {
+        if (confirm("정말 삭제하시겠습니까?") == true) {
+          commentDeleteYes(commentId);
+        }
+      }
+      function commentDeleteYes(commentId) {
+        var settings = {
+          url: `http://localhost:8080/api/question-comments/${commentId}`,
+          method: "DELETE",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          reloadComments();
+        });
+      }
+      function replyCommentUpdate(commentId, replyCommentId) {
+        let replyCommentContentId = "replyCommentContent" + replyCommentId;
+        let replyCommentContent = document.getElementById(
+          replyCommentContentId
+        ).innerHTML;
+        console.log(replyCommentContentId);
+        var newReplyCommentContent = prompt(
+          "원하시는 내용으로 수정해주세요",
+          replyCommentContent
+        );
+        var settings = {
+          url: `http://localhost:8080/api/comments/${commentId}/${replyCommentId}`,
+          method: "PUT",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            content: newReplyCommentContent,
+          }),
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          reloadComments();
+        });
+      }
+      function replyCommentDelete(commentId, replyCommentId) {
+        if (confirm("정말 삭제하시겠습니까?") == true) {
+          replyCommentDeleteYes(replyCommentId);
+        }
+      }
+      function replyCommentDeleteYes(replyCommentId) {
+        var settings = {
+          url: `http://localhost:8080/api/comments/${replyCommentId}`,
+          method: "DELETE",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          reloadComments();
+        });
+      }
+      function boardLikePost(boardId) {
+        var settings = {
+          url: `http://localhost:8080/api/question-boards/${parseInt(
+            boardId
+          )}/likes`,
+          method: "DELETE",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            reloadBoard();
+          })
+          .fail(function (response) {
+            console.log(response);
+          });
+      }
+      function boardLikeCancel(boardId) {
+        var settings = {
+          url: `http://localhost:8080/api/question-boards/${parseInt(
+            boardId
+          )}/likes`,
+          method: "POST",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            reloadBoard();
+          })
+          .fail(function (response) {
+            console.log(response);
+          });
+      }
+      function commentLikePost(commentId) {
+        var settings = {
+          url: `http://localhost:8080/api/comments/${parseInt(
+            commentId
+          )}/likes`,
+          method: "POST",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            reloadComments();
+          })
+          .fail(function (response) {
+            console.log(response);
+          });
+      }
+      function commentLikeCancel(commentId) {
+        var settings = {
+          url: `http://localhost:8080/api/comments/${parseInt(
+            commentId
+          )}/likes`,
+          method: "DELETE",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            reloadComments();
+          })
+          .fail(function (response) {
+            console.log(response);
+          });
+      }
+      function commentAdoptPostYes(commentId) {
+        var settings = {
+          url: `http://localhost:8080/api/comments/${commentId}/adoption?boardId=${localStorage.getItem(
+            "boardId"
+          )}`,
+          method: "POST",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          location.reload(true);
+        });
+      }
+      function commentAdoptPost(commentId) {
+        if (
+          confirm(
+            "한번 채택하시면 되돌릴 수 없습니다. 정말 채택하시겠습니까?"
+          ) == true
+        ) {
+          commentAdoptPostYes(commentId);
+        }
+      }
     </script>
     <script>
       function backendCategoryChoice() {
@@ -51,6 +279,39 @@
       function dataScienceCategoryChoice() {
         localStorage.setItem("categoryChoice", "DATA_SCIENCE");
         window.location = "QnA.html";
+      }
+      function boardUpdate(boardId) {
+        localStorage.setItem("boardId", boardId.toString());
+        window.location = "boardUpdate.html";
+      }
+      function boardDelete(boardId) {
+        if (
+          confirm(
+            "삭제하시더라도 포인트는 환불되지 않습니다. 정말 삭제하시겠습니까??"
+          ) == true
+        ) {
+          boardDeleteYes(boardId);
+        }
+      }
+      function boardDeleteYes(boardId) {
+        var settings = {
+          url: `http://localhost:8080/api/question-boards/${boardId}`,
+          method: "DELETE",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            window.location = "QnA.html";
+          })
+          .fail(function (response) {
+            console.log(response);
+            alert(response.message);
+          });
       }
 
       function replyCommentPost(commentId) {
@@ -74,10 +335,121 @@
           reloadComments();
         });
       }
+      function reloadBoard() {
+        var settings = {
+          url: `http://localhost:8080/api/question-boards/${parseInt(
+            localStorage.getItem("boardId")
+          )}`,
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            $("#boardCard").empty();
+            if (response.status != "NOT_ADOPTED") {
+              $("#boardCard").append(
+                `<div id="adoptStatus" style="color:white !important; background-color: blue !important; text-align: center !important;">채택완료</div>`
+              );
+            } else {
+              $("#boardCard").append(
+                `<div id="adoptStatus" style="color:white !important; background-color: gray !important; text-align: center !important;">채택대기중</div>`
+              );
+            }
+            if (localStorage.getItem("nickname") == response.nickname) {
+              $("#boardCard").append(
+                `
+              <div class="card-body">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important; margin-left: 50%;">
+                  <button type="button" class="btn btn-primary" onclick="boardUpdate(${response.id})" style="font-size: 12px;" >게시물 수정</button>
+                  <button type="button" class="btn btn-primary" onclick="boardDelete(${response.id})" style="font-size: 12px;">게시물 삭제</button>
+                </div>
+                <p style="color:black;"> Q&A 카테고리: [${response.questionCategory}]</p>
+                <hr/>
+                    <h3 class="card-title"> ${response.title}</h3>
+
+                    <p class="card-text">
+                       ${response.content}
+                    </p>
+                    <hr/>
+                    <span id="writerNickname">${response.nickname}</span>
+                    <span>  <--작성자 닉네임</span>
+
+                  </div>
+                </div>`
+              );
+            } else {
+              $("#boardCard").append(
+                `
+              <div class="card-body">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important; margin-left: 50%;">
+                </div>
+                    <p style="color:black;"> Q&A 카테고리: [${response.questionCategory}]</p>
+                <hr/>
+                    <h3 class="card-title">${response.title}</h3>
+
+                    <p class="card-text">
+                      ${response.content}
+                    </p>
+                    <hr/>
+                    <span>${response.nickname}</span>
+                    <span id="writerNickname">  <--작성자 닉네임</span>
+                    <p class="card-text">
+                      <small class="text-muted">좋아요 ${response.boardLike}</small>
+                    </p>
+                  </div>
+                </div>`
+              );
+            }
+            if (response.hasLike == true) {
+              $("#boardCard").append(`
+                <p class="card-text">
+                  <button class="text-muted" onclick="boardLikePost(${response.id})" style="background-color: blue; color: white !important;">
+                    좋아요(누름) ${response.boardLike}
+                  </button>
+                </p>`);
+            } else {
+              $("#boardCard").append(`
+                <p class="card-text">
+                  <button class="text-muted" onclick="boardLikeCancel(${response.id})" style="background-color: gray; color: white !important;">
+                    좋아요(안누름) ${response.boardLike}
+                  </button>
+                </p>`);
+            }
+            for (i = 0; i < response.imagePaths.length; i++) {
+              $("#boardCard").append(
+                `<img src=${response.imagePaths[i]} style="width:500px; heigt:500px;/">`
+              );
+            }
+          })
+          .fail(function (response) {
+            var settings2 = {
+              url: "http://localhost:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2).done(function (response) {
+              console.log(response);
+              localStorage.setItem("accessToken", response.accessToken);
+              localStorage.setItem("refreshToken", response.refreshToken);
+              location.reload(true);
+            });
+          });
+      }
 
       function reloadComments() {
         var settings = {
-          url: `http://localhost:8080/api/comments/test?boardId=${parseInt(
+          url: `http://localhost:8080/api/comments?boardId=${parseInt(
             localStorage.getItem("boardId")
           )}&page=1&size=10`,
           method: "GET",
@@ -96,24 +468,62 @@
                   </div>`
           );
           for (i = 0; i < response.content.length; i++) {
-            $("#commentLoadingPlace").append(
-              `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+            if (
+              localStorage.getItem("nickname") == response.content[i].nickname
+            ) {
+              $("#commentLoadingPlace").append(
+                `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" id="commentContent${response.content[i].id}">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;"
+                      onclick="commentUpdate(${response.content[i].id})">댓글 수정</button>
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentDelete(${response.content[i].id})">댓글 삭제</button>
+                    </div>
+                  </div>`
+              );
+            } else {
+              $("#commentLoadingPlace").append(
+                `<button class="adoptButton" onclick="commentAdoptPost(${response.content[i].id})" style="background-color: red; color: white !important; font-size:15px !important; margin-left:10%;">
+                    채택하기
+                  </button>
+                <div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
                     <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item">${response.content[i].content}</li>
                     </ul>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentUpdate(${response.content[i].id})">댓글 수정</button>
-                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentDelete(${response.content[i].id})">댓글 삭제</button>
                     </div>
                   </div>`
-            );
+              );
+            }
+            if (response.content[i].hasLike == true) {
+              $("#commentLoadingPlace").append(`
+                <p class="card-text">
+                  <button class="text-muted" onclick="commentLikeCancel(${response.content[i].id})" style="background-color: blue; color: white !important; font-size:15px !important; margin-left:10%;">
+                    좋아요(누름) ${response.content[i].commentLike}
+                  </button>
+                </p>`);
+            } else {
+              $("#commentLoadingPlace").append(`
+                <p class="card-text">
+                  <button class="text-muted" onclick="commentLikePost(${response.content[i].id})" style="background-color: gray; color: white !important; font-size:15px !important; margin-left:10%;">
+                    좋아요(안누름)  ${response.content[i].commentLike}
+                  </button>
+                </p>`);
+            }
             for (j = 0; j < response.content[i].replyCommentList.length; j++) {
-              $("#commentLoadingPlace").append(
-                `<div class="card" style="width: 70%; margin-top:10px; margin-left:20%; color: black; ">
+              if (
+                localStorage.getItem("nickname") ==
+                response.content[i].replyCommentList[j].nickname
+              ) {
+                $("#commentLoadingPlace").append(
+                  `<div class="card" style="width: 70%; margin-top:10px; margin-left:20%; color: black; ">
                     <div class="card-header" >${response.content[i].replyCommentList[j].nickname} </div>
                     <ul class="list-group list-group-flush">
-                      <li class="list-group-item">${response.content[i].replyCommentList[j].content}</li>
+                      <li class="list-group-item" id="replyCommentContent${response.content[i].replyCommentList[j].id}">${response.content[i].replyCommentList[j].content}</li>
                     </ul>
                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
                     style="font-size: 10px !important;">
@@ -121,13 +531,34 @@
                       <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentDelete(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 삭제</button>
                     </div>
                   </div>`
-              );
+                );
+              } else {
+                $("#commentLoadingPlace").append(
+                  `<div class="card" style="width: 70%; margin-top:10px; margin-left:20%; color: black; ">
+                    <div class="card-header" >${response.content[i].replyCommentList[j].nickname} </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].replyCommentList[j].content}</li>
+                    </ul>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important;">
+                    </div>
+                  </div>`
+                );
+              }
             }
             $("#commentLoadingPlace").append(
               `<input id = "replyComment${response.content[i].id}" style="width: 70%; margin-top:10px; margin-left:20%; type="text" Placeholder = "대댓글달기"/>
                   <button style="width: 30%; margin-top:5px; margin-left:60%; " onclick="replyCommentPost(${response.content[i].id})">대댓글달기</button>
                   <hr style="background-color:black;"/>`
             );
+          }
+
+          if (
+            document.getElementById("adoptStatus").innerHTML != "채택대기중" ||
+            document.getElementById("writerNickname").innerHTML !=
+              localStorage.getItem("nickname")
+          ) {
+            $(".adoptButton").hide();
           }
         });
       }
@@ -263,13 +694,6 @@
                       <small class="text-muted">Last updated 3 mins ago</small>
                     </p>
                   </div>
-
-                  <img
-                    src="https://s3.ap-northeast-2.amazonaws.com/taewoong-test/board/questionImage/7fbcc882-ada3-4cc4-8609-cdb6ee622efb.jpg"
-                    style="max-width: 500px; max-height: 500px"
-                    class="card-img-bottom"
-                    alt="..."
-                  />
                 </div>
                 <div id="commentWritePlace" style="margin: 20px">
                   <hr
@@ -316,7 +740,7 @@
                 <h3 class="mb-3 h6 text-uppercase text-black d-block">
                   Q&A 카테고리
                 </h3>
-                <ul class="list-unstyled mb-0">
+                <ul class="list-unstyled mb-0" style="cursor: pointer">
                   <li class="mb-1">
                     <a onclick="backendCategoryChoice()" class="d-flex"
                       ><span>BACKEND</span>
@@ -434,11 +858,7 @@
             <div class="col-md-12">
               <p>
                 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                Copyright &copy;
-                <script
-                  data-cfasync="false"
-                  src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-                ></script>
+
                 <script>
                   document.write(new Date().getFullYear());
                 </script>
@@ -489,7 +909,7 @@
       function postComment() {
         console.log($("#commentContent").val());
         var settings = {
-          url: `http://localhost:8080/api/question-comments?question-board-id=${parseInt(
+          url: `http://localhost:8080/api/question-comments?questionBoardId=${parseInt(
             localStorage.getItem("boardId")
           )}`,
           method: "POST",
@@ -594,6 +1014,47 @@
     <script>
       $(function () {
         var settings = {
+          url: "http://localhost:8080/api/user/me/profile",
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            $("#loginedPerson").empty();
+            $("#loginedPerson").append(
+              `<a href=QnA.html class="icon icon-person"> </a>`
+            );
+            localStorage.setItem("nickname", response.nickname);
+          })
+          .fail(function (response) {
+            var settings2 = {
+              url: "http://localhost:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2).done(function (response) {
+              console.log(response);
+              localStorage.setItem("accessToken", response.accessToken);
+              localStorage.setItem("refreshToken", response.refreshToken);
+              $("#loginedPerson").empty();
+              $("#loginedPerson").append(
+                `<a href=QnA.html class="icon icon-person"> </a>`
+              );
+              localStorage.setItem("nickname", response.nickname);
+            });
+          });
+      });
+      $(function () {
+        var settings = {
           url: `http://localhost:8080/api/question-boards/${parseInt(
             localStorage.getItem("boardId")
           )}`,
@@ -606,27 +1067,203 @@
 
         $.ajax(settings)
           .done(function (response) {
+            localStorage.setItem("boardId", `${response.id}`);
             console.log(response);
             $("#boardCard").empty();
-            $("#boardCard").append(
-              `<div class="card-body">
+            if (response.status != "NOT_ADOPTED") {
+              $("#boardCard").append(
+                `<div id="adoptStatus" style="color:white !important; background-color: blue !important; text-align: center !important;">채택완료</div>`
+              );
+            } else {
+              $("#boardCard").append(
+                `<div id="adoptStatus" style="color:white !important; background-color: gray !important; text-align: center !important;">채택대기중</div>`
+              );
+            }
+            if (localStorage.getItem("nickname") == response.nickname) {
+              $("#boardCard").append(
+                `
+              <div class="card-body">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important; margin-left: 50%;">
+                  <button type="button" class="btn btn-primary" onclick="boardUpdate(${response.id})" style="font-size: 12px;" >게시물 수정</button>
+                  <button type="button" class="btn btn-primary" onclick="boardDelete(${response.id})" style="font-size: 12px;">게시물 삭제</button>
+                </div>
+                <p style="color:black;"> Q&A 카테고리: [${response.questionCategory}]</p>
+                <hr/>
+                    <h3 class="card-title"> ${response.title}</h3>
+
+                    <p class="card-text">
+                       ${response.content}
+                    </p>
+                    <hr/>
+                    <span id="writerNickname">${response.nickname}</span>
+                    <span>  <--작성자 닉네임</span>
+
+                  </div>
+                </div>`
+              );
+            } else {
+              $("#boardCard").append(
+                `
+              <div class="card-body">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important; margin-left: 50%;">
+                </div>
+                    <p style="color:black;"> Q&A 카테고리: [${response.questionCategory}]</p>
+                <hr/>
                     <h3 class="card-title">${response.title}</h3>
 
                     <p class="card-text">
                       ${response.content}
                     </p>
-                    <div>${response.nickname}</div>
+                    <hr/>
+                    <span id="writerNickname">${response.nickname}</span>
+                    <span>  <--작성자 닉네임</span>
                     <p class="card-text">
                       <small class="text-muted">좋아요 ${response.boardLike}</small>
                     </p>
                   </div>
                 </div>`
-            );
+              );
+            }
+            if (response.hasLike == true) {
+              $("#boardCard").append(`
+                <p class="card-text">
+                  <button class="text-muted" onclick="boardLikePost(${response.id})" style="background-color: blue; color: white !important;">
+                    좋아요(누름) ${response.boardLike}
+                  </button>
+                </p>`);
+            } else {
+              $("#boardCard").append(`
+                <p class="card-text">
+                  <button class="text-muted" onclick="boardLikeCancel(${response.id})" style="background-color: gray; color: white !important;">
+                    좋아요(안누름) ${response.boardLike}
+                  </button>
+                </p>`);
+            }
             for (i = 0; i < response.imagePaths.length; i++) {
               $("#boardCard").append(
                 `<img src=${response.imagePaths[i]} style="width:500px; heigt:500px;/">`
               );
             }
+            var settings = {
+              url: `http://localhost:8080/api/comments?boardId=${parseInt(
+                localStorage.getItem("boardId")
+              )}&page=1&size=10`,
+              method: "GET",
+              timeout: 0,
+              headers: {
+                Authorization: localStorage.getItem("accessToken"),
+              },
+            };
+            $.ajax(settings).done(function (response) {
+              console.log(response.content);
+              $("#commentLoadingPlace").empty();
+              $("#commentLoadingPlace").append(
+                `<div style="font-size: 30px; font-weight: bolder; margin-left:10%; margin-bottom: 10px;">
+                    댓글목록
+                  </div>`
+              );
+              for (i = 0; i < response.content.length; i++) {
+                if (
+                  localStorage.getItem("nickname") ==
+                  response.content[i].nickname
+                ) {
+                  $("#commentLoadingPlace").append(
+                    `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" id="commentContent${response.content[i].id}">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;"
+                      onclick="commentUpdate(${response.content[i].id})">댓글 수정</button>
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentDelete(${response.content[i].id})">댓글 삭제</button>
+                    </div>
+                  </div>`
+                  );
+                } else {
+                  $("#commentLoadingPlace").append(
+                    `<button class="adoptButton" onclick="commentAdoptPost(${response.content[i].id})" style="background-color: red; color: white !important; font-size:15px !important; margin-left:10%;">
+                    채택하기
+                  </button>
+                    <div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                    </div>
+                  </div>`
+                  );
+                }
+                if (response.content[i].hasLike == true) {
+                  $("#commentLoadingPlace").append(`
+                <p class="card-text">
+                  <button class="text-muted" onclick="commentLikeCancel(${response.content[i].id})" style="background-color: blue; color: white !important; font-size:15px !important; margin-left:10%;">
+                    좋아요(누름) ${response.content[i].commentLike}
+                  </button>
+                </p>`);
+                } else {
+                  $("#commentLoadingPlace").append(`
+                <p class="card-text">
+                  <button class="text-muted" onclick="commentLikePost(${response.content[i].id})" style="background-color: gray; color: white !important; font-size:15px !important; margin-left:10%;">
+                    좋아요(안누름)  ${response.content[i].commentLike}
+                  </button>
+                </p>`);
+                }
+                for (
+                  j = 0;
+                  j < response.content[i].replyCommentList.length;
+                  j++
+                ) {
+                  if (
+                    localStorage.getItem("nickname") ==
+                    response.content[i].replyCommentList[j].nickname
+                  ) {
+                    $("#commentLoadingPlace").append(
+                      `<div class="card" style="width: 70%; margin-top:10px; margin-left:20%; color: black; ">
+                    <div class="card-header" >${response.content[i].replyCommentList[j].nickname} </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" id="replyCommentContent${response.content[i].replyCommentList[j].id}">${response.content[i].replyCommentList[j].content}</li>
+                    </ul>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important;">
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentUpdate(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 수정</button>
+                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentDelete(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 삭제</button>
+                    </div>
+                  </div>`
+                    );
+                  } else {
+                    $("#commentLoadingPlace").append(
+                      `<div class="card" style="width: 70%; margin-top:10px; margin-left:20%; color: black; ">
+                    <div class="card-header" >${response.content[i].replyCommentList[j].nickname} </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].replyCommentList[j].content}</li>
+                    </ul>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
+                    style="font-size: 10px !important;">
+                    </div>
+                  </div>`
+                    );
+                  }
+                }
+                $("#commentLoadingPlace").append(
+                  `<input id = "replyComment${response.content[i].id}" style="width: 70%; margin-top:10px; margin-left:20%; type="text" Placeholder = "대댓글달기"/>
+                  <button style="width: 30%; margin-top:5px; margin-left:60%; " onclick="replyCommentPost(${response.content[i].id})">대댓글달기</button>
+                  <hr style="background-color:black;"/>`
+                );
+              }
+              console.log(document.getElementById("writerNickname").innerHTML);
+              if (
+                document.getElementById("adoptStatus").innerHTML !=
+                  "채택대기중" ||
+                document.getElementById("writerNickname").innerHTML !=
+                  localStorage.getItem("nickname")
+              ) {
+                $(".adoptButton").hide();
+              }
+            });
           })
           .fail(function (response) {
             var settings2 = {
@@ -647,62 +1284,7 @@
           });
       });
 
-      $(function () {
-        var settings = {
-          url: `http://localhost:8080/api/comments/test?boardId=${parseInt(
-            localStorage.getItem("boardId")
-          )}&page=1&size=10`,
-          method: "GET",
-          timeout: 0,
-          headers: {
-            Authorization: localStorage.getItem("accessToken"),
-          },
-        };
-
-        $.ajax(settings).done(function (response) {
-          console.log(response.content);
-          $("#commentLoadingPlace").empty();
-          $("#commentLoadingPlace").append(
-            `<div style="font-size: 30px; font-weight: bolder; margin-left:10%; margin-bottom: 10px;">
-                    댓글목록
-                  </div>`
-          );
-          for (i = 0; i < response.content.length; i++) {
-            $("#commentLoadingPlace").append(
-              `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
-                    <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">${response.content[i].content}</li>
-                    </ul>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentUpdate(${response.content[i].id})">댓글 수정</button>
-                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentDelete(${response.content[i].id})">댓글 삭제</button>
-                    </div>
-                  </div>`
-            );
-            for (j = 0; j < response.content[i].replyCommentList.length; j++) {
-              $("#commentLoadingPlace").append(
-                `<div class="card" style="width: 70%; margin-top:10px; margin-left:20%; color: black; ">
-                    <div class="card-header" >${response.content[i].replyCommentList[j].nickname} </div>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">${response.content[i].replyCommentList[j].content}</li>
-                    </ul>
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
-                    style="font-size: 10px !important;">
-                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentUpdate(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 수정</button>
-                      <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="replyCommentDelete(${response.content[i].id},${response.content[i].replyCommentList[j].id})">대댓글 삭제</button>
-                    </div>
-                  </div>`
-              );
-            }
-            $("#commentLoadingPlace").append(
-              `<input id = "replyComment${response.content[i].id}" style="width: 70%; margin-top:10px; margin-left:20%; type="text" Placeholder = "대댓글달기"/>
-                  <button style="width: 30%; margin-top:5px; margin-left:60%; " onclick="replyCommentPost(${response.content[i].id})">대댓글달기</button>
-                  <hr style="background-color:black;"/>`
-            );
-          }
-        });
-      });
+      // $(function () {});
     </script>
   </body>
 </html>
