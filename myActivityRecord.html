@@ -36,6 +36,39 @@
 
     <link rel="stylesheet" href="css/style.css" />
     <script>
+      $(function () {
+        var settings = {
+          url: "http://localhost:8080/api/user/me/profile",
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {})
+          .fail(function (response) {
+            var settings2 = {
+              url: "http://localhost:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2)
+              .done(function (response) {
+                localStorage.setItem("accessToken", response.accessToken);
+                localStorage.setItem("refreshToken", response.refreshToken);
+                location.reload(true);
+              })
+              .fail(function (response) {
+                window.location = "signUp.html";
+              });
+          });
+      });
       function logout() {
         var settings = {
           url: "http://localhost:8080/api/logout",
@@ -91,39 +124,37 @@
               });
           });
       }
-      function profileUpdate() {
-        var form = new FormData();
-        console.log($("#imageInput")[0].files[0]);
-        console.log($("#nicknameInput").val());
-        if ($("#imageInput")[0].files.length != 0) {
-          form.append("image", $("#imageInput")[0].files[0]);
+      function withDrawal() {
+        var passwordCheck = prompt("계정 비밀번호를 입력해주세요");
+        if (passwordCheck == null) {
+          return;
         }
-        const json = JSON.stringify({
-          nickname: $("#nicknameInput").val(),
-        });
-        const blob = new Blob([json], { type: "application/json" });
-        form.append("request", blob);
         var settings = {
-          url: "http://localhost:8080/api/user/me/profile",
-          method: "PUT",
+          url: "http://localhost:8080/api/withdrawal",
+          method: "PATCH",
           timeout: 0,
           headers: {
             Authorization: localStorage.getItem("accessToken"),
+            "Content-Type": "application/json",
           },
-          processData: false,
-          mimeType: "multipart/form-data",
-          contentType: false,
-          data: form,
+          data: JSON.stringify({
+            password: passwordCheck,
+          }),
         };
 
-        $.ajax(settings).done(function (response) {
-          console.log(response);
-          location.reload(true);
-        });
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            alert(response);
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            location.reload(true);
+          })
+          .fail(function (response) {
+            console.log(response);
+            alert(response.responseText);
+          });
       }
-
-      function accountNavbar() {}
-      function activityRecordNavbar() {}
     </script>
   </head>
   <body>
@@ -204,7 +235,11 @@
       </header>
       <div class="site-section site-blocks-2">
         <div class="container">
-          <div class="row" id="contentPlace"></div>
+          <div class="row" id="contentPlace">
+            <div style="margin: 30px 25%; font-size: 25px; display: block">
+              나의 활동조회 기능도 추후 추가 예정입니다^^
+            </div>
+          </div>
         </div>
       </div>
 
@@ -340,77 +375,5 @@
     <script src="js/jquery.magnific-popup.min.js"></script>
     <script src="js/aos.js"></script>
     <script src="js/main.js"></script>
-    <script>
-      $(function () {
-        var settings = {
-          url: "http://localhost:8080/api/user/me/profile",
-          method: "GET",
-          timeout: 0,
-          headers: {
-            Authorization: localStorage.getItem("accessToken"),
-          },
-        };
-
-        $.ajax(settings)
-          .done(function (response) {
-            console.log(response);
-            $("#loginedPerson").empty();
-            $("#loginedPerson").append(
-              `<a href=QnA.html class="icon icon-person"> </a>`
-            );
-            $("#logoutPlace").append(
-              `<button style="font-size: 12px; cursor: pointer" onclick="logout()">
-                        로그아웃
-                      </button>`
-            );
-            $("#contentPlace").empty();
-            $("#contentPlace").append(
-              `<div style="margin:auto">
-                <div style="color: black; font-size: 25px; text-align: center; width: 300px; ">프로필사진</div> 
-              <img src=${response.profileImageUrl} class="img-thumbnail" style="width: 300px; height: 300px;">
-              <div>
-              <label
-                    for="formFileMultiple"
-                    class="form-label"
-                    style="color: black; font-size: 20px; "
-                    >프로필사진 변경을 원하시면 이미지를 추가해주세요</label
-                  >
-                  <!-- <form id="uploadForm"> -->
-                  <input
-                    class="form-control"
-                    id="imageInput"
-                    type="file"
-                    id="uploadImagesForm"
-                  />
-                  </div>
-              </div>
-              <div style="margin: auto;">
-                <div style="color: black; font-size: 25px; text-align: center;">닉네임</div>
-              <input type:text; id="nicknameInput" value=${response.nickname}>
-              </div>
-              <div style="diplay: block !important; margin: 20px 40%;">
-              <button style="display:block; margin: auto; cursor: pointer;" onclick="profileUpdate()">프로필 수정하기</button>
-              </div>
-              `
-            );
-          })
-          .fail(function (response) {
-            var settings2 = {
-              url: "http://localhost:8080/api/reissue",
-              method: "POST",
-              timeout: 0,
-              headers: {
-                Refresh: localStorage.getItem("refreshToken"),
-              },
-            };
-
-            $.ajax(settings2).done(function (response) {
-              localStorage.setItem("accessToken", response.accessToken);
-              localStorage.setItem("refreshToken", response.refreshToken);
-              location.reload(true);
-            });
-          });
-      });
-    </script>
   </body>
 </html>

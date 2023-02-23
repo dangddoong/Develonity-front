@@ -11,7 +11,7 @@
       integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
       crossorigin="anonymous"
     ></script>
-    <title>Developer's community - Develonity</title>
+    <title>Develonity</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -129,8 +129,9 @@
                       <a href="#" class="icon icon-heart-o"></a>
                     </li>
                     <li>
-                      <a href="orderList.html" class="site-cart">
+                      <a href="cart.html" class="site-cart">
                         <span class="icon icon-shopping_cart"></span>
+                        <span class="count">2</span>
                       </a>
                     </li>
                     <li class="d-inline-block d-md-none ml-md-0">
@@ -150,10 +151,33 @@
         >
           <div class="container">
             <ul class="site-menu js-clone-nav d-none d-md-block">
-              <li><a href="index.html">Home</a></li>
-              <li><a href="#">Community</a></li>
-              <li><a href="#">Q&A</a></li>
-              <li><a href="shop.html">GiftCard Shop</a></li>
+              <li class="has-children active">
+                <a href="index.html">Home</a>
+                <ul class="dropdown">
+                  <li><a href="#">Menu One</a></li>
+                  <li><a href="#">Menu Two</a></li>
+                  <li><a href="#">Menu Three</a></li>
+                  <li class="has-children">
+                    <a href="#">Sub Menu</a>
+                    <ul class="dropdown">
+                      <li><a href="#">Menu One</a></li>
+                      <li><a href="#">Menu Two</a></li>
+                      <li><a href="#">Menu Three</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li class="has-children">
+                <a href="about.html">About</a>
+                <ul class="dropdown">
+                  <li><a href="#">Menu One</a></li>
+                  <li><a href="#">Menu Two</a></li>
+                  <li><a href="#">Menu Three</a></li>
+                </ul>
+              </li>
+              <li><a href="shop.html">Shop</a></li>
+              <li><a href="#">Catalogue</a></li>
+              <li><a href="#">New Arrivals</a></li>
               <li><a href="contact.html">Contact</a></li>
             </ul>
           </div>
@@ -169,16 +193,10 @@
             >
               <a class="block-2-item" href="#">
                 <figure class="image">
-                  <img
-                    src="images/meeting-594091_640.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="images/women.jpg" alt="" class="img-fluid" />
                 </figure>
                 <div class="text">
-                  <span class="text-uppercase"
-                    >현업/예비 개발자들과 소통이 필요해?</span
-                  >
+                  <span class="text-uppercase">Collections</span>
                   <h3>커뮤니티 게시판</h3>
                 </div>
               </a>
@@ -190,16 +208,10 @@
             >
               <a class="block-2-item" href="QnA.html">
                 <figure class="image">
-                  <img
-                    src="images/business-woman-2756209_640.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="images/children.jpg" alt="" class="img-fluid" />
                 </figure>
                 <div class="text">
-                  <span class="text-uppercase"
-                    >개발하면서 막히는게 있다면?</span
-                  >
+                  <span class="text-uppercase">Collections</span>
                   <h3>Q&A 게시판</h3>
                 </div>
               </a>
@@ -211,16 +223,10 @@
             >
               <a class="block-2-item" href="#">
                 <figure class="image">
-                  <img
-                    src="images/coupon-421600_640.jpg"
-                    alt=""
-                    class="img-fluid"
-                  />
+                  <img src="images/men.jpg" alt="" class="img-fluid" />
                 </figure>
                 <div class="text">
-                  <span class="text-uppercase"
-                    >기프트포인트로 기프티콘을 구매해보세요</span
-                  >
+                  <span class="text-uppercase">Collections</span>
                   <h3>기프티콘 샵</h3>
                 </div>
               </a>
@@ -233,7 +239,7 @@
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-7 site-section-heading text-center pt-4">
-              <h2>Q&A 게시판 바로가기</h2>
+              <h2>Featured Products</h2>
             </div>
           </div>
           <div class="row">
@@ -243,13 +249,15 @@
                   <div class="block-4 text-center">
                     <figure class="block-4-image">
                       <img
-                        src="images/laptop-2620118_640.jpg"
+                        src="images/cloth_1.jpg"
                         alt="Image placeholder"
                         class="img-fluid"
                       />
                     </figure>
                     <div class="block-4-text p-4">
-                      <h3><a href="#">BACKEND</a></h3>
+                      <h3><a href="#">Tank Top</a></h3>
+                      <p class="mb-0">Finding perfect t-shirt</p>
+                      <p class="text-primary font-weight-bold">$50</p>
                     </div>
                   </div>
                 </div>
@@ -257,13 +265,15 @@
                   <div class="block-4 text-center">
                     <figure class="block-4-image">
                       <img
-                        src="images/code-1076536_640.jpg"
+                        src="images/shoe_1.jpg"
                         alt="Image placeholder"
                         class="img-fluid"
                       />
                     </figure>
                     <div class="block-4-text p-4">
-                      <h3><a href="#">FRONTEND</a></h3>
+                      <h3><a href="#">Corater</a></h3>
+                      <p class="mb-0">Finding perfect products</p>
+                      <p class="text-primary font-weight-bold">$50</p>
                     </div>
                   </div>
                 </div>
@@ -271,13 +281,15 @@
                   <div class="block-4 text-center">
                     <figure class="block-4-image">
                       <img
-                        src="images/artificial-intelligence-7768524_640.jpg"
+                        src="images/cloth_2.jpg"
                         alt="Image placeholder"
                         class="img-fluid"
                       />
                     </figure>
                     <div class="block-4-text p-4">
-                      <h3><a href="#">AI</a></h3>
+                      <h3><a href="#">Polo Shirt</a></h3>
+                      <p class="mb-0">Finding perfect products</p>
+                      <p class="text-primary font-weight-bold">$50</p>
                     </div>
                   </div>
                 </div>
@@ -285,13 +297,31 @@
                   <div class="block-4 text-center">
                     <figure class="block-4-image">
                       <img
-                        src="images/digitization-6605643_640.jpg"
+                        src="images/cloth_3.jpg"
                         alt="Image placeholder"
                         class="img-fluid"
                       />
                     </figure>
                     <div class="block-4-text p-4">
-                      <h3><a href="#">DATA SCIENCE</a></h3>
+                      <h3><a href="#">T-Shirt Mockup</a></h3>
+                      <p class="mb-0">Finding perfect products</p>
+                      <p class="text-primary font-weight-bold">$50</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="block-4 text-center">
+                    <figure class="block-4-image">
+                      <img
+                        src="images/shoe_1.jpg"
+                        alt="Image placeholder"
+                        class="img-fluid"
+                      />
+                    </figure>
+                    <div class="block-4-text p-4">
+                      <h3><a href="#">Corater</a></h3>
+                      <p class="mb-0">Finding perfect products</p>
+                      <p class="text-primary font-weight-bold">$50</p>
                     </div>
                   </div>
                 </div>
@@ -301,7 +331,7 @@
         </div>
       </div>
 
-      <!-- <div class="site-section block-8">
+      <div class="site-section block-8">
         <div class="container">
           <div class="row justify-content-center mb-5">
             <div class="col-md-7 site-section-heading text-center pt-4">
@@ -332,12 +362,55 @@
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <footer class="site-footer border-top">
         <div class="container">
           <div class="row">
-            <div class="col-md-6 col-lg-3" style="margin: auto">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="footer-heading mb-4">Navigations</h3>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <ul class="list-unstyled">
+                    <li><a href="#">Sell online</a></li>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Shopping cart</a></li>
+                    <li><a href="#">Store builder</a></li>
+                  </ul>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <ul class="list-unstyled">
+                    <li><a href="#">Mobile commerce</a></li>
+                    <li><a href="#">Dropshipping</a></li>
+                    <li><a href="#">Website development</a></li>
+                  </ul>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <ul class="list-unstyled">
+                    <li><a href="#">Point of sale</a></li>
+                    <li><a href="#">Hardware</a></li>
+                    <li><a href="#">Software</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+              <h3 class="footer-heading mb-4">Promo</h3>
+              <a href="#" class="block-6">
+                <img
+                  src="images/hero_1.jpg"
+                  alt="Image placeholder"
+                  class="img-fluid rounded mb-4"
+                />
+                <h3 class="font-weight-light mb-0">
+                  Finding Your Perfect Shoes
+                </h3>
+                <p>Promo from nuary 15 &mdash; 25, 2019</p>
+              </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
               <div class="block-5 mb-5">
                 <h3 class="footer-heading mb-4">Contact Info</h3>
                 <ul class="list-unstyled">
@@ -385,7 +458,14 @@
                 <script>
                   document.write(new Date().getFullYear());
                 </script>
-                All rights reserved | Develonity
+                All rights reserved | This template is made with
+                <i class="icon-heart" aria-hidden="true"></i> by
+                <a
+                  href="https://colorlib.com"
+                  target="_blank"
+                  class="text-primary"
+                  >Colorlib</a
+                >
                 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
               </p>
             </div>

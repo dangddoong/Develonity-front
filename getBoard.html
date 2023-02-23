@@ -2,7 +2,49 @@
 <html lang="en">
   <head>
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+      $(function () {
+        var settings = {
+          url: "http://localhost:8080/api/user/me/profile",
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
 
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            $("#loginedPerson").empty();
+            $("#loginedPerson").append(
+              `<a href=myProfile.html class="icon icon-person"> </a>`
+            );
+            $("#logoutPlace").append(
+              `<button style="font-size: 12px; cursor: pointer" onclick="logout()">
+                        로그아웃
+                      </button>`
+            );
+            localStorage.setItem("nickname", response.nickname);
+          })
+          .fail(function (response) {
+            var settings2 = {
+              url: "http://localhost:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2).done(function (response) {
+              localStorage.setItem("accessToken", response.accessToken);
+              localStorage.setItem("refreshToken", response.refreshToken);
+              location.reload(true);
+            });
+          });
+      });
+    </script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
 
@@ -258,6 +300,61 @@
         ) {
           commentAdoptPostYes(commentId);
         }
+      }
+      function logout() {
+        var settings = {
+          url: "http://localhost:8080/api/logout",
+          method: "POST",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            location.reload(true);
+          })
+          .fail(function (response) {
+            var settings2 = {
+              url: "http://localhost:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2)
+              .done(function (response) {
+                localStorage.setItem("accessToken", response.accessToken);
+                localStorage.setItem("refreshToken", response.refreshToken);
+                var settings3 = {
+                  url: "http://localhost:8080/api/logout",
+                  method: "POST",
+                  timeout: 0,
+                  headers: {
+                    Authorization: location.getItem("accessToken"),
+                  },
+                };
+                $.ajax(settings3)
+                  .done(function (response) {
+                    console.log(response);
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("refreshToken");
+                    location.reload(true);
+                  })
+                  .fail(function (response) {
+                    location.reload(true);
+                  });
+              })
+              .fail(function (response) {
+                location.reload(true);
+              });
+          });
       }
     </script>
     <script>
@@ -618,16 +715,16 @@
               <div class="col-6 col-md-4 order-3 order-md-3 text-right">
                 <div class="site-top-icons">
                   <ul>
-                    <li>
-                      <a href="#"><span class="icon icon-person"></span></a>
+                    <li id="logoutPlace"></li>
+                    <li id="loginedPerson">
+                      <a href="signUp.html" class="icon icon-person"> </a>
                     </li>
                     <li>
-                      <a href="#"><span class="icon icon-heart-o"></span></a>
+                      <a href="#" class="icon icon-heart-o"></a>
                     </li>
                     <li>
-                      <a href="cart.html" class="site-cart">
+                      <a href="orderList.html" class="site-cart">
                         <span class="icon icon-shopping_cart"></span>
-                        <span class="count">2</span>
                       </a>
                     </li>
                     <li class="d-inline-block d-md-none ml-md-0">
@@ -770,26 +867,25 @@
                   <li class="mb-1">
                     <a onclick="backendCategoryChoice()" class="d-flex"
                       ><span>BACKEND</span>
-                      <span class="text-black ml-auto">(2,220)</span></a
-                    >
+                      <span class="text-black ml-auto"></span
+                    ></a>
                   </li>
                   <li class="mb-1">
                     <a onclick="frontCategoryChoice()" class="d-flex"
                       ><span>FRONTEND</span>
-                      <span class="text-black ml-auto">(2,550)</span></a
-                    >
+                      <span class="text-black ml-auto"></span
+                    ></a>
                   </li>
                   <li class="mb-1">
                     <a onclick="aiCategoryChoice()" class="d-flex"
-                      ><span>AI</span>
-                      <span class="text-black ml-auto">(2,124)</span></a
-                    >
+                      ><span>AI</span> <span class="text-black ml-auto"></span
+                    ></a>
                   </li>
                   <li class="mb-1">
                     <a onclick="dataScienceCategoryChoice()" class="d-flex"
                       ><span>DATA_SCIENCE</span>
-                      <span class="text-black ml-auto">(2,124)</span></a
-                    >
+                      <span class="text-black ml-auto"></span
+                    ></a>
                   </li>
                 </ul>
               </div>
@@ -1038,47 +1134,6 @@
       }
     </script>
     <script>
-      $(function () {
-        var settings = {
-          url: "http://localhost:8080/api/user/me/profile",
-          method: "GET",
-          timeout: 0,
-          headers: {
-            Authorization: localStorage.getItem("accessToken"),
-          },
-        };
-
-        $.ajax(settings)
-          .done(function (response) {
-            console.log(response);
-            $("#loginedPerson").empty();
-            $("#loginedPerson").append(
-              `<a href=QnA.html class="icon icon-person"> </a>`
-            );
-            localStorage.setItem("nickname", response.nickname);
-          })
-          .fail(function (response) {
-            var settings2 = {
-              url: "http://localhost:8080/api/reissue",
-              method: "POST",
-              timeout: 0,
-              headers: {
-                Refresh: localStorage.getItem("refreshToken"),
-              },
-            };
-
-            $.ajax(settings2).done(function (response) {
-              console.log(response);
-              localStorage.setItem("accessToken", response.accessToken);
-              localStorage.setItem("refreshToken", response.refreshToken);
-              $("#loginedPerson").empty();
-              $("#loginedPerson").append(
-                `<a href=QnA.html class="icon icon-person"> </a>`
-              );
-              localStorage.setItem("nickname", response.nickname);
-            });
-          });
-      });
       $(function () {
         var settings = {
           url: `http://localhost:8080/api/question-boards/${parseInt(
