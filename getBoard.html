@@ -471,8 +471,20 @@
             if (
               localStorage.getItem("nickname") == response.content[i].nickname
             ) {
-              $("#commentLoadingPlace").append(
-                `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+              if (response.content[i].commentStatus == "ADOPTED") {
+                $("#commentLoadingPlace").append(
+                  `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: coral; color: white;">${response.content[i].nickname} ⭐[채 택 댓 글]⭐</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                    </div>
+                  </div>`
+                );
+              } else {
+                $("#commentLoadingPlace").append(
+                  `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
                     <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item" id="commentContent${response.content[i].id}">${response.content[i].content}</li>
@@ -483,13 +495,26 @@
                       <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentDelete(${response.content[i].id})">댓글 삭제</button>
                     </div>
                   </div>`
-              );
+                );
+              }
             } else {
-              $("#commentLoadingPlace").append(
-                `<button class="adoptButton" onclick="commentAdoptPost(${response.content[i].id})" style="background-color: red; color: white !important; font-size:15px !important; margin-left:10%;">
+              if (response.content[i].commentStatus == "ADOPTED") {
+                $("#commentLoadingPlace").append(
+                  `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: coral; color: white;">${response.content[i].nickname} ⭐[채 택 댓 글]⭐</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                    </div>
+                  </div>`
+                );
+              } else {
+                $("#commentLoadingPlace").append(
+                  `<button class="adoptButton" onclick="commentAdoptPost(${response.content[i].id})" style="background-color: red; color: white !important; font-size:15px !important; margin-left:10%;">
                     채택하기
                   </button>
-                <div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
                     <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item">${response.content[i].content}</li>
@@ -497,7 +522,8 @@
                     <div class="btn-group" role="group" aria-label="Basic example">
                     </div>
                   </div>`
-              );
+                );
+              }
             }
             if (response.content[i].hasLike == true) {
               $("#commentLoadingPlace").append(`
@@ -1169,8 +1195,20 @@
                   localStorage.getItem("nickname") ==
                   response.content[i].nickname
                 ) {
-                  $("#commentLoadingPlace").append(
-                    `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                  if (response.content[i].commentStatus == "ADOPTED") {
+                    $("#commentLoadingPlace").append(
+                      `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: coral; color: white;">${response.content[i].nickname} ⭐[채 택 댓 글]⭐</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                    </div>
+                  </div>`
+                    );
+                  } else {
+                    $("#commentLoadingPlace").append(
+                      `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
                     <div class="card-header" style="background-color: darkgray;">${response.content[i].nickname}</div>
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item" id="commentContent${response.content[i].id}">${response.content[i].content}</li>
@@ -1181,10 +1219,23 @@
                       <button type="button" class="btn btn-primary" style="font-size: 12px;" onclick="commentDelete(${response.content[i].id})">댓글 삭제</button>
                     </div>
                   </div>`
-                  );
+                    );
+                  }
                 } else {
-                  $("#commentLoadingPlace").append(
-                    `<button class="adoptButton" onclick="commentAdoptPost(${response.content[i].id})" style="background-color: red; color: white !important; font-size:15px !important; margin-left:10%;">
+                  if (response.content[i].commentStatus == "ADOPTED") {
+                    $("#commentLoadingPlace").append(
+                      `<div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
+                    <div class="card-header" style="background-color: coral; color: white;">${response.content[i].nickname} ⭐[채 택 댓 글]⭐</div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">${response.content[i].content}</li>
+                    </ul>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                    </div>
+                  </div>`
+                    );
+                  } else {
+                    $("#commentLoadingPlace").append(
+                      `<button class="adoptButton" onclick="commentAdoptPost(${response.content[i].id})" style="background-color: red; color: white !important; font-size:15px !important; margin-left:10%;">
                     채택하기
                   </button>
                     <div class="card" id = comment${response.content[i].id} style="width: 80%; margin-top:10px; color: black; margin-left:10%">
@@ -1195,7 +1246,8 @@
                     <div class="btn-group" role="group" aria-label="Basic example">
                     </div>
                   </div>`
-                  );
+                    );
+                  }
                 }
                 if (response.content[i].hasLike == true) {
                   $("#commentLoadingPlace").append(`

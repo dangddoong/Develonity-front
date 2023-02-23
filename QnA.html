@@ -46,7 +46,7 @@
             $("#boardList").empty();
             for (i = 0; i < response.content.length; i++) {
               $("#boardList").append(
-                `<div class="card w-100 p-3" onclick="choiceOneQuestion(${response.content[i].id})" style="width: max-content">
+                `<div class="card w-100 p-3" onclick="choiceOneQuestion(${response.content[i].id})" style="width: max-content; cursor: pointer;">
                   <div class="card-header"></div>
                   <div class="card-body">
                     <blockquote class="blockquote mb-0">
@@ -428,24 +428,28 @@
       function backendCategoryChoice() {
         questionCategory = "BACKEND";
         $("#categoryNotice").text("BACKEND Category");
+        localStorage.setItem("categoryChoice", "BACKEND");
         reloadQuestions();
       }
 
       function frontCategoryChoice() {
         questionCategory = "FRONTEND";
         $("#categoryNotice").text("FRONTEND Category");
+        localStorage.setItem("categoryChoice", "FRONTEND");
         reloadQuestions();
       }
 
       function aiCategoryChoice() {
         questionCategory = "AI";
         $("#categoryNotice").text("AI Category");
+        localStorage.setItem("categoryChoice", "AI");
         reloadQuestions();
       }
 
       function dataScienceCategoryChoice() {
         questionCategory = "DATA_SCIENCE";
         $("#categoryNotice").text("DATA_SCIENCE Category");
+        localStorage.setItem("categoryChoice", "DATA_SCIENCE");
         reloadQuestions();
       }
       function pageSizeChoice(sizeNumber) {
@@ -485,7 +489,7 @@
             $("#boardList").empty();
             for (i = 0; i < response.content.length; i++) {
               $("#boardList").append(
-                `<div class="card w-100 p-3" onclick="choiceOneQuestion(${response.content[i].id})" style="width: max-content">
+                `<div class="card w-100 p-3" onclick="choiceOneQuestion(${response.content[i].id})" style="width: max-content; cursor: pointer;">
                   <div class="card-header"></div>
                   <div class="card-body">
                     <blockquote class="blockquote mb-0">
