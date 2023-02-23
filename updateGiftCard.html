@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Developer's community - Develonity</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+  <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/magnific-popup.css">
+  <link rel="stylesheet" href="css/jquery-ui.css">
+  <link rel="stylesheet" href="css/owl.carousel.min.css">
+  <link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+
+  <link rel="stylesheet" href="css/aos.css">
+
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .orderForm {
+      width: 500px;
+      margin: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="site-wrap">
+    <header class="site-navbar" role="banner">
+      <div class="site-navbar-top">
+        <div class="container">
+          <div class="row align-items-center">
+
+            <div class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
+              <form action="" class="site-block-top-search">
+                <!-- <span class="icon icon-search2"></span>
+                <input type="text" class="form-control border-0" placeholder="Search"> -->
+              </form>
+            </div>
+
+            <div class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center">
+              <div class="site-logo">
+                <a href="index.html" class="js-logo-clone">Develonity</a>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4 order-3 order-md-3 text-right">
+              <div class="site-top-icons">
+                <ul>
+                  <li><a href="#"><span class="icon icon-person"></span></a></li>
+                  <li><a href="#"><span class="icon icon-heart-o"></span></a></li>
+                  <li>
+                    <a href="orderList.html" class="site-cart">
+                      <span class="icon icon-shopping_cart"></span>
+                    </a>
+                  </li>
+                  <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span
+                        class="icon-menu"></span></a></li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <nav class="site-navigation text-right text-md-center" role="navigation">
+        <div class="container">
+          <ul class="site-menu js-clone-nav d-none d-md-block">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Q&A</a></li>
+            <li><a href="shop.html">GiftCard Shop</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <div class="bg-light py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 mb-0"><span>기프트카드수정</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="orderForm">
+      <div class="form-floating mb-3">
+        <h3>기프트카드 수정하기</h3>
+        <div id="updateBox">
+
+        </div>
+        <button onclick="updateGiftCardWithImage()">수정하기</button>
+      </div>
+
+
+
+
+    </div>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+
+    <script src="js/main.js"></script>
+    <script>
+      $(document).ready(function () {
+        getGiftCardInfo()
+      });
+
+      function getGiftCardInfo() {
+        var settings = {
+          "url": `http://localhost:8080/api/gift-cards/${localStorage.getItem("updateGiftCardId")}`,
+          "method": "GET",
+          "timeout": 0,
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          let category = response['category']
+          let details = response['details']
+          let id = response['id']
+          let imageUrl = response['imagePath']
+          let name = response['name']
+          let price = response['price']
+          let stockQuantity = response['stockQuantity']
+
+          let temp_html = `<div class="form-floating">
+            <label for="floatingInput">카테고리 선택</label>
+            <select class="form-select" aria-label="Default select example" id="categorySelectBox">
+              <option selected>${category}</option>
+              <option value="1">CAFE</option>
+              <option value="2">CHICKEN</option>
+              <option value="3">CONVENIENCE_STORE</option>
+            </select>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="floatingName" value="${name}">
+            <label for="floatingName">상품명</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="floatingDetails" value="${details}">
+            <label for="floatingDetails">상세설명</label>
+          </div>
+          <div class="form-floating">
+            <input
+                    class="form-control"
+                    type="file"
+                    id="uploadImagesForm"
+                  />
+          <label for="floatingImageURL">이미지 첨부</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="floatingPrice" value="${price}">
+            <label for="floatingPrice">가격</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="floatingQuantity" value="${stockQuantity}">
+            <label for="floatingQuantity">수량</label>
+          </div>`
+
+          $('#updateBox').append(temp_html)
+        });
+      }
+
+      function updateGiftCard() {
+        var target = document.getElementById("categorySelectBox")
+        let updateGiftCard = localStorage.getItem('updateGiftCardId')
+        var settings = {
+          "url": `http://localhost:8080/api/gift-cards/${updateGiftCard}`,
+          "method": "PUT",
+          "timeout": 0,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "data": JSON.stringify({
+            "category": target.options[target.selectedIndex].text,
+            "name": $('#floatingName').val(),
+            "details": $('#floatingDetails').val(),
+            "imageUrl": $('#floatingImageURL').val(),
+            "price": $('#floatingPrice').val(),
+            "stockQuantity": $('#floatingQuantity').val()
+          }),
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          alert('수정이 완료되었습니다')
+          window.location = '/adminGiftCardList.html'
+        }).fail(function (response) {
+          console.log(response)
+          alert(response.responseJSON['message']);
+        })
+          ;
+      }
+
+      function updateGiftCardWithImage() {
+        var form = new FormData();
+        var target = document.getElementById("categorySelectBox")
+        let updateGiftCard = localStorage.getItem('updateGiftCardId')
+
+        var data = {
+          category: target.options[target.selectedIndex].text,
+          name: $('#floatingName').val(),
+          details: $('#floatingDetails').val(),
+          price: $('#floatingPrice').val(),
+          stockQuantity: $('#floatingQuantity').val()
+        }
+
+        form.append("image", document.getElementById("uploadImagesForm").files[0]);
+        form.append("request", new Blob([JSON.stringify(data)], {type: "application/json"}));
+
+        var settings = {
+          "url": `http://localhost:8080/api/gift-cards/${updateGiftCard}`,
+          "method": "PUT",
+          "timeout": 0,
+          "processData": false,
+          "mimeType": "multipart/form-data",
+          "contentType": false,
+          "data": form
+        };
+
+        $.ajax(settings).done(function (response) {
+          $.ajax(settings).done(function (response) {
+          console.log(response);
+          alert('수정이 완료되었습니다')
+          window.location = '/adminGiftCardList.html'
+        }).fail(function (response) {
+          console.log(response)
+          alert(response.responseJSON['message']);
+        })
+        });
+      }
+
+    </script>
+
+</body>
+
+</html>
