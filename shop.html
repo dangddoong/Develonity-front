@@ -79,7 +79,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12 mb-0"><a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <strong
-              class="text-black"><a href="shop.html">GiftCard Shop</a></strong></div>
+              class="text-black">GiftCard Shop</strong></div>
         </div>
       </div>
     </div>
@@ -98,12 +98,12 @@
                 <div id="sortBox">
                   <div class="pagination" style="float: right;">
                     정렬:
-                    <select id="sorting" onchange="allGiftCardListing()">
+                    <select id="sorting" onchange="giftCardListing()">
                       <option value="name">상품명</option>
                       <option value="price">가격</option>
                     </select>
-                    <input type="radio" name="isAsc" value="true" onchange="allGiftCardListing()" checked /> 오름차순
-                    <input type="radio" name="isAsc" value="false" onchange="allGiftCardListing()" /> 내림차순
+                    <input type="radio" name="isAsc" value="true" onchange="giftCardListing()" checked /> 오름차순
+                    <input type="radio" name="isAsc" value="false" onchange="giftCardListing()" /> 내림차순
                   </div>
                   <div id="pagination" class="pagination"></div>
                 </div>
@@ -117,13 +117,13 @@
               <div class="col-md-12 text-center">
                 <div class="site-block-27">
                   <ul id="pages">
-                    <li><a href="#">&lt;</a></li>
+                    <!-- <li><a href="#">&lt;</a></li>
                     <li class="active"><span>1</span></li>
                     <li><a href="#">2</a></li>
                     <li><a href="#">3</a></li>
                     <li><a href="#">4</a></li>
                     <li><a href="#">5</a></li>
-                    <li><a href="#">&gt;</a></li>
+                    <li><a href="#">&gt;</a></li> -->
                   </ul>
                 </div>
               </div>
@@ -134,19 +134,20 @@
             <div class="border p-4 rounded mb-4">
               <h3 class="mb-3 h6 text-uppercase text-black d-block">Categories</h3>
               <ul class="list-unstyled mb-0">
-                <li class="mb-1" onclick="allGiftCardListing()" class="d-flex" style="cursor: pointer; color: #7971ea;">
-                  <span id="allCategory">All</span> <span class="text-black ml-auto"></span>
+                <li class="mb-1" onclick="getGiftCardList(this)" class="d-flex"
+                  style="cursor: pointer; color: #7971ea;">
+                  <span id="AllCategory">All</span> <span class="text-black ml-auto"></span>
                 </li>
-                <li class="mb-1" onclick="getCategorizedGiftCardList(1)" class="d-flex"
-                  style="cursor: pointer; color: #7971ea;"><span id="1category">Cafe</span> <span
+                <li class="mb-1" onclick="getGiftCardList(this)" class="d-flex"
+                  style="cursor: pointer; color: #7971ea;"><span id="CafeCategory">Cafe</span> <span
                     class="text-black ml-auto"></span>
                 </li>
-                <li class="mb-1" onclick="getCategorizedGiftCardList(2)" class="d-flex"
-                  style="cursor: pointer; color: #7971ea;"><span id="2category">Chicken</span> <span
+                <li class="mb-1" onclick="getGiftCardList(this)" class="d-flex"
+                  style="cursor: pointer; color: #7971ea;"><span id="ChickenCategory">Chicken</span> <span
                     class="text-black ml-auto"></span>
                 </li>
-                <li class="mb-1" onclick="getCategorizedGiftCardList(3)" class="d-flex"
-                  style="cursor: pointer; color: #7971ea;"><span id="3category">Convenience Store</span> <span
+                <li class="mb-1" onclick="getGiftCardList(this)" class="d-flex"
+                  style="cursor: pointer; color: #7971ea;"><span id="ConvenienceCategory">Convenience Store</span> <span
                     class="text-black ml-auto"></span></li>
 
               </ul>
@@ -171,28 +172,82 @@
 
   <script>
     $(document).ready(function () {
-      allGiftCardListing()
+      giftCardListing()
     });
 
-    function giftCardSorting() {
-      $('#gift-cards-box').empty()
-    }
+    let TOTAL_ELEMENTS = 0; // 데이터 총 개수
+    const SIZE = 12; // 화면에 출력 개수
+    let TOTAL_PAGES = 0; // 총 페이지
 
+    const VIEW_SECTION = 5; // 페이지 버튼 출력 개수
+    let TOTAL_SECTION = Math.ceil(TOTAL_PAGES / VIEW_SECTION) // 총 페이지 수
 
-    function allGiftCardListing() {
-      $('#gift-cards-box').empty()
-      let sorting = $("#sorting option:selected").val();
-      let isAsc = $(':radio[name="isAsc"]:checked').val();
+    var page = 1; // 페이지가 1부터 시작할 때
+    let currentPage;
 
+    // // TODO: add onclick of page-button
+    // function todo(element) {
+    //   return () => {
+    //     const id = localStorage.getItem("currentPage") // 없으면 undefined
+    //     if (!id) {
+    //       localStorage.setItem("currentPage", element.id)
+    //       element.className = "active"
+    //     } else {
+    //       const el = document.getElementById(id);
+    //       el.className = ""
+    //       localStorage.setItem("currentPage", element.id)
+    //       element.className = "active"
+    //     }
+    //   }
+    // }
+
+    // 상품가져오는 API 호출하는 함수
+    function getItems(category, currentPage, sorting, isAsc) {
       var settings = {
-        "url": `http://localhost:8080/api/gift-cards?currentPage=1&size=12&sortBy=${sorting}&ascOrDesc=${isAsc}`, // 페이징 부분 변수 받아오는 법 알아보고 적용하기
+        "url": `http://localhost:8080/api/gift-cards/category?category=${category}&currentPage=${currentPage}&size=12&sortBy=${sorting}&ascOrDesc=${isAsc}`,
         "method": "GET",
-        "timeout": 0,
+        "timeout": 3000,
       };
 
       $.ajax(settings).done(function (response) {
+        $('#gift-cards-box').empty()
         console.log(response);
         let rows = response['content'];
+
+        // let pagesUl = document.getElementById("pages")
+
+        // // 왼쪽 화살표
+        // const leftLi = document.createElement('li')
+        // const leftA = document.createElement('a')
+        // leftA.text = "<"
+        // leftA.href = "#"
+        // leftLi.appendChild(leftA)
+        // pagesUl.appendChild(leftLi)
+        // // ------------------------
+
+        // let pages = +response['totalPages'] // String을 Num으로 받음
+        // for (let i = 1; i <= pages; i++) {
+        //   let el = document.createElement("li")
+        //   let aEl = document.createElement("span")
+        //   aEl.textContent = i // 화면에 보이는 데이터
+        //   el.id = i // li 태그의 id
+
+        //   el.onclick = todo(el); // 함수 원형만 초기화 가능
+
+        //   el.appendChild(aEl)
+        //   pagesUl.appendChild(el)
+        // }
+
+        // const rightLi = document.createElement('li')
+        // const rightA = document.createElement('a')
+        // rightA.text = ">"
+        // rightA.href = "#"
+        // rightLi.appendChild(rightA)
+        // pagesUl.appendChild(rightLi)
+
+        // let currentUl = document.getElementById("pages");
+        // currentUl.create
+
         for (let i = 0; i < rows.length; i++) {
           let name = rows[i]['name']
           let details = rows[i]['details']
@@ -215,76 +270,49 @@
               </div>`
 
           $('#gift-cards-box').append(temp_html)
-
         }
+        
+
       });
-
-      $('#categoryName').empty()
-      let categoryName = $('#allCategory').text()
-      let temp_html2 = `
-                <div class="float-md-left mb-4">
-                  <h2 class="text-black h5">${categoryName}</h2>
-                </div>`
-
-      $('#categoryName').append(temp_html2)
     }
 
+    function giftCardListing() {
+      let sorting = $("#sorting option:selected").val();
+      let isAsc = $(':radio[name="isAsc"]:checked').val();
+      let category = localStorage.getItem("categoryName")
 
+      if (!category) {
+        getItems('ALL', 1, sorting, isAsc);
+      } else {
+        getItems(category, 1, sorting, isAsc);
+      }
+    }
 
-    function getCategorizedGiftCardList(categoryId) {
-      $('#gift-cards-box').empty()
-      // const a = document.getElementById("sorting")
-      // console.log(a.options[a.selectedIndex].value)
-      // let sortByValue = a.options[a.selectedIndex].value
+    function getGiftCardList(element) {
+      var categoryName = element.children[0].getAttribute("id")
+      var category;
+      if (categoryName === 'AllCategory') {
+        category = 'ALL';
+      } else if (categoryName === 'CafeCategory') {
+        category = 'CAFE';
+      } else if (categoryName === 'ChickenCategory') {
+        category = 'CHICKEN';
+      } else if (categoryName === 'ConvenienceCategory') {
+        category = 'CONVENIENCE_STORE';
+      }
+      localStorage.setItem("categoryName", category);
       let sorting = $("#sorting option:selected").val();
       let isAsc = $(':radio[name="isAsc"]:checked').val();
 
-      var settings = {
-        "url": `http://localhost:8080/api/gift-cards/category?categoryId=${categoryId}&currentPage=1&size=12&sortBy=${sorting}&ascOrDesc=${isAsc}`,
-        "method": "GET",
-        "timeout": 0,
-      };
+      // TODO : currentPage 변수 추가하기
+      let currentPage = localStorage.getItem("currentPage")
+      getItems(category, 1, sorting, isAsc)
 
-      $.ajax(settings).done(function (response) {
-        console.log(response);
-        let rows = response['content'];
-        for (let i = 0; i < rows.length; i++) {
-          let name = rows[i]['name']
-          let details = rows[i]['details']
-          let imageUrl = rows[i]['imagePath']
-          let price = rows[i]['price']
-          let id = rows[i]['id']
-
-          let temp_html = `<div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
-                <div class="block-4 text-center border">
-                  <figure class="block-4-image">
-                    <a href="shop-single.html" onclick="setGiftCard(${id})"><img src="${imageUrl}" alt="Image" class="img-fluid"></a>
-                  </figure>
-                  <div class="block-4-text p-4">
-                    <h3><a href="shop-single.html" onclick="setGiftCard(${id})">${name}</a></h3>
-                    <p class="mb-0">${details}</p>
-                    <p class="text-primary font-weight-bold">${price}원</p>
-                    <button type="button" class="btn btn-secondary" onclick="directOrder(${id})">구매하기</button>
-                  </div>
-                </div>
-              </div>`
-
-          $('#gift-cards-box').append(temp_html)
-          $('#categoryName').empty()
-          let categoryName = $(`#${categoryId}category`).text()
-          let temp_html2 = `
-                <div class="float-md-left mb-4">
-                  <h2 class="text-black h5">${categoryName}</h2>
-                </div>`
-
-          $('#categoryName').append(temp_html2)
-
-        }
-      });
     }
+
     function directOrder(id) {
       localStorage.setItem("giftCardId", id);
-      window.location='/order.html'
+      window.location = '/order.html'
     }
 
     function setGiftCard(id) {
