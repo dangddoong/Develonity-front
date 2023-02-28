@@ -66,13 +66,13 @@
             <nav class="site-navigation text-right text-md-center" role="navigation">
                 <div class="container">
                     <ul class="site-menu js-clone-nav d-none d-md-block">
-                      <li><a href="index.html">Home</a></li>
-                      <li><a href="#">Community</a></li>
-                      <li><a href="#">Q&A</a></li>
-                      <li><a href="shop.html">GiftCard Shop</a></li>
-                      <li><a href="contact.html">Contact</a></li>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Q&A</a></li>
+                        <li><a href="shop.html">GiftCard Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
-                  </div>
+                </div>
             </nav>
         </header>
 
@@ -84,15 +84,16 @@
                 </div>
             </div>
         </div>
-        
-            
+
+
 
         <div class="site-section">
             <div class="container">
                 <div class="row mb-5">
                     <form class="col-md-12" method="GET">
                         <div class="site-blocks-table">
-                            <button onclick="window.open('/registerGiftCard.html')" style="float: right; margin-bottom: 30px;">기프트카드 등록하기</button>
+                            <button onclick="window.open('/registerGiftCard.html')"
+                                style="float: right; margin-bottom: 30px;">기프트카드 등록하기</button>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -136,16 +137,14 @@
                     <p>
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         Copyright &copy;
-                        <script
-                          data-cfasync="false"
-                          src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-                        ></script>
+                        <script data-cfasync="false"
+                            src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
                         <script>
-                          document.write(new Date().getFullYear());
+                            document.write(new Date().getFullYear());
                         </script>
                         All rights reserved | Develonity
                         <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                      </p>
+                    </p>
                 </div>
 
             </div>
@@ -171,7 +170,7 @@
         function getAdminGiftCardList() {
             $('#giftCardList').empty()
             var settings = {
-                "url": "http://localhost:8080/api/gift-cards?currentPage=1&size=10&sortBy=name&ascOrDesc=true",
+                "url": "http://localhost:8080/api/gift-cards/category?category=ALL&currentPage=1&size=10&sortBy=name&ascOrDesc=true",
                 "method": "GET",
                 "timeout": 0,
             };
@@ -205,16 +204,20 @@
                     $('#giftCardList').append(temp_html)
                 }
 
-            });
+            })
+                .fail(function (response) {
+                    console.log(response)
+                    alert("Error Code : " + response['responseJSON'].status)
+                });
         }
 
         function updateGiftCard(id) {
             localStorage.setItem("updateGiftCardId", id);
-            window.location='/updateGiftCard.html'
+            window.location = '/updateGiftCard.html'
         }
         function deleteConfirm(id) {
             let result = confirm("삭제하면 복구가 불가능합니다. \n정말 삭제하시겠습니까?");
-            if(result) {
+            if (result) {
                 deleteGiftCard(id)
             } else {
                 alert('삭제를 취소합니다.')
