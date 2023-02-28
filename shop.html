@@ -205,7 +205,7 @@
     // 상품가져오는 API 호출하는 함수
     function getItems(category, currentPage, sorting, isAsc) {
       var settings = {
-        "url": `http://localhost:8080/api/gift-cards/category?category=${category}&currentPage=${currentPage}&size=3&sortBy=${sorting}&ascOrDesc=${isAsc}`,
+        "url": `http://localhost:8080/api/gift-cards/category?category=${category}&currentPage=${currentPage}&size=6&sortBy=${sorting}&ascOrDesc=${isAsc}`,
         "method": "GET",
         "timeout": 3000,
       };
@@ -259,7 +259,7 @@
     }
 
     function paging(totalElements, currentPage) {
-      const dataPerPage = 3; // 페이지 당 보여줄 데이터 개수
+      const dataPerPage = 6; // 페이지 당 보여줄 데이터 개수
       const pageCount = 5; // 한번에 보여줄 페이지 번호 개수
       currentPage = localStorage.getItem("currentPage")
 
