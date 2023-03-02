@@ -24,11 +24,13 @@
 
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/jquery-3.3.1.min.js"></script>
+  </head>
+  <body>
     <script>
-      $(function () {
+      function logout() {
         var settings = {
-          url: "http://localhost:8080/api/user/me/profile",
-          method: "GET",
+          url: "http://52.79.252.88:8080/api/logout",
+          method: "POST",
           timeout: 0,
           headers: {
             Authorization: localStorage.getItem("accessToken"),
@@ -38,19 +40,13 @@
         $.ajax(settings)
           .done(function (response) {
             console.log(response);
-            $("#loginedPerson").empty();
-            $("#loginedPerson").append(
-              `<a href=myProfile.html class="icon icon-person"> </a>`
-            );
-            $("#logoutPlace").append(
-              `<button style="font-size: 12px; cursor: pointer" onclick="logout()">
-                        로그아웃
-                      </button>`
-            );
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            location.reload(true);
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -58,16 +54,35 @@
               },
             };
 
-            $.ajax(settings2).done(function (response) {
-              localStorage.setItem("accessToken", response.accessToken);
-              localStorage.setItem("refreshToken", response.refreshToken);
-              location.reload(true);
-            });
+            $.ajax(settings2)
+              .done(function (response) {
+                localStorage.setItem("accessToken", response.accessToken);
+                localStorage.setItem("refreshToken", response.refreshToken);
+                var settings3 = {
+                  url: "http://52.79.252.88:8080/api/logout",
+                  method: "POST",
+                  timeout: 0,
+                  headers: {
+                    Authorization: location.getItem("accessToken"),
+                  },
+                };
+                $.ajax(settings3)
+                  .done(function (response) {
+                    console.log(response);
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("refreshToken");
+                    location.reload(true);
+                  })
+                  .fail(function (response) {
+                    location.reload(true);
+                  });
+              })
+              .fail(function (response) {
+                location.reload(true);
+              });
           });
-      });
+      }
     </script>
-  </head>
-  <body>
     <script>
       let questionCategory = "BACKEND";
       let pageChoice = 1;
@@ -75,7 +90,7 @@
       let isAscChoice = false;
       function reloadQuestions() {
         var settings = {
-          url: `http://localhost:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${questionCategory}`,
+          url: `http://52.79.252.88:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${questionCategory}`,
           method: "GET",
           timeout: 0,
           headers: {
@@ -109,7 +124,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -512,12 +527,54 @@
     </script>
     <script>
       $(function () {
+        var settings = {
+          url: "http://52.79.252.88:8080/api/user/me/profile",
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            $("#loginedPerson").empty();
+            $("#loginedPerson").append(
+              `<a href=myProfile.html class="icon icon-person"> </a>`
+            );
+            $("#logoutPlace").append(
+              `<button style="font-size: 12px; cursor: pointer" onclick="logout()">
+                        로그아웃
+                      </button>`
+            );
+          })
+          .fail(function (response) {
+            var settings2 = {
+              url: "http://52.79.252.88:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2).done(function (response) {
+              localStorage.setItem("accessToken", response.accessToken);
+              localStorage.setItem("refreshToken", response.refreshToken);
+              location.reload(true);
+            });
+          });
+      });
+    </script>
+    <script>
+      $(function () {
         let categoryInLocalStorage = localStorage.getItem("categoryChoice");
         if (categoryInLocalStorage == null) {
           categoryInLocalStorage = "BACKEND";
         }
         var settings = {
-          url: `http://localhost:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${categoryInLocalStorage}`,
+          url: `http://52.79.252.88:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${categoryInLocalStorage}`,
           method: "GET",
           timeout: 0,
           headers: {
@@ -551,7 +608,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -559,12 +616,17 @@
               },
             };
 
-            $.ajax(settings2).done(function (response) {
-              console.log(response);
-              localStorage.setItem("accessToken", response.accessToken);
-              localStorage.setItem("refreshToken", response.refreshToken);
-              location.reload(true);
-            });
+            $.ajax(settings2)
+              .done(function (response) {
+                console.log(response);
+                localStorage.setItem("accessToken", response.accessToken);
+                localStorage.setItem("refreshToken", response.refreshToken);
+                location.reload(true);
+              })
+              .fail(function (response) {
+                alert("로그인이 필요한 서비스입니다.");
+                location.href = "signUp.html";
+              });
           });
       });
     </script>

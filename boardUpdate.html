@@ -462,7 +462,7 @@
         const blob = new Blob([json], { type: "application/json" });
         form.append("request", blob);
         var settings = {
-          url: `http://localhost:8080/api/question-boards/${localStorage.getItem(
+          url: `http://52.79.252.88:8080/api/question-boards/${localStorage.getItem(
             "boardId"
           )}`,
           method: "PUT",
@@ -483,7 +483,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -507,7 +507,7 @@
     <script>
       $(function () {
         var settings = {
-          url: `http://localhost:8080/api/question-boards/${parseInt(
+          url: `http://52.79.252.88:8080/api/question-boards/${parseInt(
             localStorage.getItem("boardId")
           )}`,
           method: "GET",
@@ -633,7 +633,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -651,7 +651,7 @@
       });
       // $(function () {
       //   var settings = {
-      //     url: `http://localhost:8080/api/user/me/profile`,
+      //     url: `http://52.79.252.88:8080/api/user/me/profile`,
       //     method: "GET",
       //     timeout: 0,
       //     headers: {
@@ -675,7 +675,7 @@
       //     })
       //     .fail(function (response) {
       //       var settings2 = {
-      //         url: "http://localhost:8080/api/reissue",
+      //         url: "http://52.79.252.88:8080/api/reissue",
       //         method: "POST",
       //         timeout: 0,
       //         headers: {

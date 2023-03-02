@@ -121,7 +121,7 @@
       function getGiftCardOrderInfo() {
         $('#orderInfo').empty()
         var settings = {
-          "url": `http://localhost:8080/api/gift-cards/${localStorage.getItem("giftCardId")}`,
+          "url": `http://52.79.252.88:8080/api/gift-cards/${localStorage.getItem("giftCardId")}`,
           "method": "GET",
           "timeout": 0,
         };
@@ -159,7 +159,7 @@
 
       function order() {
         var settings = {
-          "url": "http://localhost:8080/api/order",
+          "url": "http://52.79.252.88:8080/api/order",
           "method": "POST",
           "timeout": 0,
           "headers": {

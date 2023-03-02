@@ -5,7 +5,7 @@
     <script>
       $(function () {
         var settings = {
-          url: "http://localhost:8080/api/user/me/profile",
+          url: "http://52.79.252.88:8080/api/user/me/profile",
           method: "GET",
           timeout: 0,
           headers: {
@@ -29,7 +29,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -104,7 +104,7 @@
           commentContent
         );
         var settings = {
-          url: `http://localhost:8080/api/question-comments/${parseInt(
+          url: `http://52.79.252.88:8080/api/question-comments/${parseInt(
             commentId
           )}`,
           method: "PUT",
@@ -130,7 +130,7 @@
       }
       function commentDeleteYes(commentId) {
         var settings = {
-          url: `http://localhost:8080/api/question-comments/${commentId}`,
+          url: `http://52.79.252.88:8080/api/question-comments/${commentId}`,
           method: "DELETE",
           timeout: 0,
           headers: {
@@ -154,7 +154,7 @@
           replyCommentContent
         );
         var settings = {
-          url: `http://localhost:8080/api/comments/${commentId}/${replyCommentId}`,
+          url: `http://52.79.252.88:8080/api/comments/${commentId}/${replyCommentId}`,
           method: "PUT",
           timeout: 0,
           headers: {
@@ -178,7 +178,7 @@
       }
       function replyCommentDeleteYes(replyCommentId) {
         var settings = {
-          url: `http://localhost:8080/api/comments/${replyCommentId}`,
+          url: `http://52.79.252.88:8080/api/comments/${replyCommentId}`,
           method: "DELETE",
           timeout: 0,
           headers: {
@@ -193,7 +193,7 @@
       }
       function boardLikePost(boardId) {
         var settings = {
-          url: `http://localhost:8080/api/question-boards/${parseInt(
+          url: `http://52.79.252.88:8080/api/question-boards/${parseInt(
             boardId
           )}/likes`,
           method: "DELETE",
@@ -214,7 +214,7 @@
       }
       function boardLikeCancel(boardId) {
         var settings = {
-          url: `http://localhost:8080/api/question-boards/${parseInt(
+          url: `http://52.79.252.88:8080/api/question-boards/${parseInt(
             boardId
           )}/likes`,
           method: "POST",
@@ -235,7 +235,7 @@
       }
       function commentLikePost(commentId) {
         var settings = {
-          url: `http://localhost:8080/api/comments/${parseInt(
+          url: `http://52.79.252.88:8080/api/comments/${parseInt(
             commentId
           )}/likes`,
           method: "POST",
@@ -256,7 +256,7 @@
       }
       function commentLikeCancel(commentId) {
         var settings = {
-          url: `http://localhost:8080/api/comments/${parseInt(
+          url: `http://52.79.252.88:8080/api/comments/${parseInt(
             commentId
           )}/likes`,
           method: "DELETE",
@@ -277,7 +277,7 @@
       }
       function commentAdoptPostYes(commentId) {
         var settings = {
-          url: `http://localhost:8080/api/comments/${commentId}/adoption?boardId=${localStorage.getItem(
+          url: `http://52.79.252.88:8080/api/comments/${commentId}/adoption?boardId=${localStorage.getItem(
             "boardId"
           )}`,
           method: "POST",
@@ -303,7 +303,7 @@
       }
       function logout() {
         var settings = {
-          url: "http://localhost:8080/api/logout",
+          url: "http://52.79.252.88:8080/api/logout",
           method: "POST",
           timeout: 0,
           headers: {
@@ -320,7 +320,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -333,7 +333,7 @@
                 localStorage.setItem("accessToken", response.accessToken);
                 localStorage.setItem("refreshToken", response.refreshToken);
                 var settings3 = {
-                  url: "http://localhost:8080/api/logout",
+                  url: "http://52.79.252.88:8080/api/logout",
                   method: "POST",
                   timeout: 0,
                   headers: {
@@ -392,7 +392,7 @@
       }
       function boardDeleteYes(boardId) {
         var settings = {
-          url: `http://localhost:8080/api/question-boards/${boardId}`,
+          url: `http://52.79.252.88:8080/api/question-boards/${boardId}`,
           method: "DELETE",
           timeout: 0,
           headers: {
@@ -413,7 +413,7 @@
 
       function replyCommentPost(commentId) {
         var settings = {
-          url: `http://localhost:8080/api/comments?comment-id=${parseInt(
+          url: `http://52.79.252.88:8080/api/comments?comment-id=${parseInt(
             commentId
           )}`,
           method: "POST",
@@ -434,7 +434,7 @@
       }
       function reloadBoard() {
         var settings = {
-          url: `http://localhost:8080/api/question-boards/${parseInt(
+          url: `http://52.79.252.88:8080/api/question-boards/${parseInt(
             localStorage.getItem("boardId")
           )}`,
           method: "GET",
@@ -527,7 +527,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -546,7 +546,7 @@
 
       function reloadComments() {
         var settings = {
-          url: `http://localhost:8080/api/comments?boardId=${parseInt(
+          url: `http://52.79.252.88:8080/api/comments?boardId=${parseInt(
             localStorage.getItem("boardId")
           )}&page=1&size=10`,
           method: "GET",
@@ -1031,7 +1031,7 @@
       function postComment() {
         console.log($("#commentContent").val());
         var settings = {
-          url: `http://localhost:8080/api/question-comments?questionBoardId=${parseInt(
+          url: `http://52.79.252.88:8080/api/question-comments?questionBoardId=${parseInt(
             localStorage.getItem("boardId")
           )}`,
           method: "POST",
@@ -1054,7 +1054,7 @@
           .fail(function (response) {
             console.log(response);
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -1098,7 +1098,7 @@
         const blob = new Blob([json], { type: "application/json" });
         form.append("request", blob);
         var settings = {
-          url: "http://localhost:8080/api/question-boards",
+          url: "http://52.79.252.88:8080/api/question-boards",
           method: "POST",
           timeout: 0,
           headers: {
@@ -1116,7 +1116,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -1136,7 +1136,7 @@
     <script>
       $(function () {
         var settings = {
-          url: `http://localhost:8080/api/question-boards/${parseInt(
+          url: `http://52.79.252.88:8080/api/question-boards/${parseInt(
             localStorage.getItem("boardId")
           )}`,
           method: "GET",
@@ -1228,7 +1228,7 @@
               );
             }
             var settings = {
-              url: `http://localhost:8080/api/comments?boardId=${parseInt(
+              url: `http://52.79.252.88:8080/api/comments?boardId=${parseInt(
                 localStorage.getItem("boardId")
               )}&page=1&size=10`,
               method: "GET",
@@ -1374,7 +1374,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -1382,12 +1382,17 @@
               },
             };
 
-            $.ajax(settings2).done(function (response) {
-              console.log(response);
-              localStorage.setItem("accessToken", response.accessToken);
-              localStorage.setItem("refreshToken", response.refreshToken);
-              location.reload(true);
-            });
+            $.ajax(settings2)
+              .done(function (response) {
+                console.log(response);
+                localStorage.setItem("accessToken", response.accessToken);
+                localStorage.setItem("refreshToken", response.refreshToken);
+                location.reload(true);
+              })
+              .fail(function (response) {
+                alert("로그인이 필요한 서비스입니다.");
+                location.href = "signUp.html";
+              });
           });
       });
 

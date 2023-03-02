@@ -153,7 +153,7 @@
         function getAdminGiftCardList() {
             $('#giftCardList').empty()
             var settings = {
-                "url": "http://localhost:8080/api/gift-cards/category?category=ALL&currentPage=1&size=10&sortBy=name&ascOrDesc=true",
+                "url": "http://52.79.252.88:8080/api/gift-cards/category?category=ALL&currentPage=1&size=10&sortBy=name&ascOrDesc=true",
                 "method": "GET",
                 "timeout": 0,
             };
@@ -209,7 +209,7 @@
 
         function deleteGiftCard(id) {
             var settings = {
-                "url": `http://localhost:8080/api/gift-cards/${id}`,
+                "url": `http://52.79.252.88:8080/api/gift-cards/${id}`,
                 "method": "DELETE",
                 "timeout": 0,
             };

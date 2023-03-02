@@ -37,7 +37,7 @@
     <script>
       function logout() {
         var settings = {
-          url: "http://localhost:8080/api/logout",
+          url: "http://52.79.252.88:8080/api/logout",
           method: "POST",
           timeout: 0,
           headers: {
@@ -54,7 +54,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {
@@ -67,7 +67,7 @@
                 localStorage.setItem("accessToken", response.accessToken);
                 localStorage.setItem("refreshToken", response.refreshToken);
                 var settings3 = {
-                  url: "http://localhost:8080/api/logout",
+                  url: "http://52.79.252.88:8080/api/logout",
                   method: "POST",
                   timeout: 0,
                   headers: {
@@ -406,7 +406,7 @@
     <script>
       $(function () {
         var settings = {
-          url: "http://localhost:8080/api/user/me/profile",
+          url: "http://52.79.252.88:8080/api/user/me/profile",
           method: "GET",
           timeout: 0,
           headers: {
@@ -429,7 +429,7 @@
           })
           .fail(function (response) {
             var settings2 = {
-              url: "http://localhost:8080/api/reissue",
+              url: "http://52.79.252.88:8080/api/reissue",
               method: "POST",
               timeout: 0,
               headers: {

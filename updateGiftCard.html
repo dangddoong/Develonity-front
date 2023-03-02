@@ -117,7 +117,7 @@
 
       function getGiftCardInfo() {
         var settings = {
-          "url": `http://localhost:8080/api/gift-cards/${localStorage.getItem("updateGiftCardId")}`,
+          "url": `http://52.79.252.88:8080/api/gift-cards/${localStorage.getItem("updateGiftCardId")}`,
           "method": "GET",
           "timeout": 0,
         };
@@ -174,7 +174,7 @@
         var target = document.getElementById("categorySelectBox")
         let updateGiftCard = localStorage.getItem('updateGiftCardId')
         var settings = {
-          "url": `http://localhost:8080/api/gift-cards/${updateGiftCard}`,
+          "url": `http://52.79.252.88:8080/api/gift-cards/${updateGiftCard}`,
           "method": "PUT",
           "timeout": 0,
           "headers": {
@@ -218,7 +218,7 @@
         form.append("request", new Blob([JSON.stringify(data)], {type: "application/json"}));
 
         var settings = {
-          "url": `http://localhost:8080/api/gift-cards/${updateGiftCard}`,
+          "url": `http://52.79.252.88:8080/api/gift-cards/${updateGiftCard}`,
           "method": "PUT",
           "timeout": 0,
           "processData": false,
