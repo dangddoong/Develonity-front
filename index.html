@@ -35,6 +35,27 @@
 
     <link rel="stylesheet" href="css/style.css" />
     <script>
+      function backendCategory() {
+        localStorage.setItem("categoryChoice", "BACKEND");
+        window.location = "QnA.html";
+      }
+      function frontCategory() {
+        localStorage.setItem("categoryChoice", "FRONTEND");
+        window.location = "QnA.html";
+      }
+      function aiCategory() {
+        localStorage.setItem("categoryChoice", "AI");
+        window.location = "QnA.html";
+      }
+      function dataScienceCategory() {
+        localStorage.setItem("categoryChoice", "DATA_SCIENCE");
+        window.location = "QnA.html";
+      }
+      function community() {
+        alert(
+          "해당 기능은 시간관계상 프론트 구현을 하지 못하여 이용이 어렵습니다. 죄송합니다."
+        );
+      }
       function logout() {
         var settings = {
           url: "http://52.79.252.88:8080/api/logout",
@@ -152,10 +173,9 @@
           <div class="container">
             <ul class="site-menu js-clone-nav d-none d-md-block">
               <li><a href="index.html">Home</a></li>
-              <li><a href="#">Community</a></li>
-              <li><a href="#">Q&A</a></li>
+              <li><a onclick="community()">Community</a></li>
+              <li><a href="QnA.html">Q&A</a></li>
               <li><a href="shop.html">GiftCard Shop</a></li>
-              <li><a href="contact.html">Contact</a></li>
             </ul>
           </div>
         </nav>
@@ -168,7 +188,7 @@
               data-aos="fade"
               data-aos-delay=""
             >
-              <a class="block-2-item" href="#">
+              <a class="block-2-item" onclick="community()">
                 <figure class="image">
                   <img
                     src="images/meeting-594091_640.jpg"
@@ -240,7 +260,11 @@
           <div class="row">
             <div class="col-md-12">
               <div class="nonloop-block-3 owl-carousel">
-                <div class="item">
+                <div
+                  class="item"
+                  style="cursor: pointer"
+                  onclick="backendCategory()"
+                >
                   <div class="block-4 text-center">
                     <figure class="block-4-image">
                       <img
@@ -254,7 +278,11 @@
                     </div>
                   </div>
                 </div>
-                <div class="item">
+                <div
+                  class="item"
+                  style="cursor: pointer"
+                  onclick="frontCategory()"
+                >
                   <div class="block-4 text-center">
                     <figure class="block-4-image">
                       <img
@@ -268,7 +296,11 @@
                     </div>
                   </div>
                 </div>
-                <div class="item">
+                <div
+                  class="item"
+                  style="cursor: pointer"
+                  onclick="aiCategory()"
+                >
                   <div class="block-4 text-center">
                     <figure class="block-4-image">
                       <img
@@ -282,7 +314,11 @@
                     </div>
                   </div>
                 </div>
-                <div class="item">
+                <div
+                  class="item"
+                  style="cursor: pointer"
+                  onclick="dataScienceCategory()"
+                >
                   <div class="block-4 text-center">
                     <figure class="block-4-image">
                       <img
