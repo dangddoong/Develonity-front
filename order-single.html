@@ -57,11 +57,12 @@
               <div class="col-6 col-md-4 order-3 order-md-3 text-right">
                 <div class="site-top-icons">
                   <ul>
-                    <li>
-                      <a href="#"><span class="icon icon-person"></span></a>
+                    <li id="logoutPlace"></li>
+                    <li id="loginedPerson">
+                      <a href="signUp.html" class="icon icon-person"> </a>
                     </li>
                     <li>
-                      <a href="#"><span class="icon icon-heart-o"></span></a>
+                      <a href="#" class="icon icon-heart-o"></a>
                     </li>
                     <li>
                       <a href="orderList.html" class="site-cart">
@@ -130,6 +131,53 @@
       });
     </script>
     <script>
+      $(function () {
+        var settings = {
+          url: "http://52.79.252.88:8080/api/user/me/profile",
+          method: "GET",
+          timeout: 0,
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            $("#loginedPerson").empty();
+            $("#loginedPerson").append(
+              `<a href=myProfile.html class="icon icon-person"> </a>`
+            );
+            $("#logoutPlace").append(
+              `<button style="font-size: 12px; cursor: pointer" onclick="logout()">
+                        로그아웃
+                      </button>`
+            );
+          })
+          .fail(function (response) {
+            var settings2 = {
+              url: "http://52.79.252.88:8080/api/reissue",
+              method: "POST",
+              timeout: 0,
+              headers: {
+                Refresh: localStorage.getItem("refreshToken"),
+              },
+            };
+
+            $.ajax(settings2).done(function (response) {
+              localStorage.setItem("accessToken", response.accessToken);
+              localStorage.setItem("refreshToken", response.refreshToken);
+              location.reload(true);
+            });
+          });
+      });
+    </script>
+    <script>
+      function community() {
+        alert(
+          "해당 기능은 시간관계상 프론트 구현을 하지 못하여 이용이 어렵습니다. 죄송합니다."
+        );
+      }
       function getOrderDetails(id) {
         $("#orderDetails").empty();
         var settings = {
