@@ -95,7 +95,7 @@
       let isAscChoice = false;
       function reloadQuestions() {
         var settings = {
-          url: `http://52.79.252.88:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${questionCategory}`,
+          url: `http://52.79.252.88:8080/api/question-boards?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${questionCategory}`,
           method: "GET",
           timeout: 0,
           headers: {
@@ -120,6 +120,10 @@
                       <footer class="blockquote-footer">
                         nickname:  
                         <cite title="Source Title">${response.content[i].nickname}</cite>
+                        <span> / [좋아요: ${response.content[i].boardLike}]</span>
+                        <span> / [댓글수: ${response.content[i].countComments}]</span>
+                        <span> / [채택시 포인트: ${response.content[i].prizePoint}]</span>
+                        <span> / [채택여부: ${response.content[i].status}]</span>
                       </footer>
                     </blockquote>
                   </div>
@@ -154,10 +158,7 @@
               <div
                 class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left"
               >
-                <form action="" class="site-block-top-search">
-                  
-                  
-                </form>
+                <form action="" class="site-block-top-search"></form>
               </div>
 
               <div
@@ -312,9 +313,7 @@
               </div>
               <div class="row" data-aos="fade-up">
                 <div class="col-md-12 text-center">
-                  <div class="site-block-27">
-              
-                  </div>
+                  <div class="site-block-27"></div>
                 </div>
               </div>
             </div>
@@ -354,7 +353,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <script src="js/jquery-3.3.1.min.js"></script>
@@ -461,7 +459,7 @@
           $("#categoryNotice").text(categoryNotice);
         }
         var settings = {
-          url: `http://52.79.252.88:8080/api/question-boards/test?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${categoryInLocalStorage}`,
+          url: `http://52.79.252.88:8080/api/question-boards?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${categoryInLocalStorage}`,
           method: "GET",
           timeout: 0,
           headers: {
@@ -486,6 +484,10 @@
                       <footer class="blockquote-footer">
                         nickname:  
                         <cite title="Source Title">${response.content[i].nickname}</cite>
+                        <span> / [좋아요: ${response.content[i].boardLike}]</span>
+                        <span> / [댓글수: ${response.content[i].countComments}]</span>
+                        <span> / [채택시 포인트: ${response.content[i].prizePoint}]</span>
+                        <span> / [채택여부: ${response.content[i].status}]</span>
                       </footer>
                     </blockquote>
                   </div>

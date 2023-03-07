@@ -472,6 +472,7 @@
                   <button type="button" class="btn btn-primary" onclick="boardDelete(${response.id})" style="font-size: 12px;">게시물 삭제</button>
                 </div>
                 <p style="color:black;"> Q&A 카테고리: [${response.questionCategory}]</p>
+                <p style="color:black;"> 채택시 포인트: [${response.prizePoint}]</p>
                 <hr/>
                     <h3 class="card-title"> ${response.title}</h3>
 
@@ -493,6 +494,7 @@
                     style="font-size: 10px !important; margin-left: 50%;">
                 </div>
                     <p style="color:black;"> Q&A 카테고리: [${response.questionCategory}]</p>
+                    <p style="color:black;"> 채택시 포인트: [${response.prizePoint}]</p>
                 <hr/>
                     <h3 class="card-title">${response.title}</h3>
 
@@ -698,9 +700,7 @@
             <div class="row align-items-center">
               <div
                 class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left"
-              >
-                
-              </div>
+              ></div>
 
               <div
                 class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center"
@@ -870,9 +870,7 @@
 
       <footer class="site-footer border-top">
         <div class="container">
-          <div class="row">
-
-          </div>
+          <div class="row"></div>
           <div class="row pt-5 mt-5 text-center">
             <div class="col-md-12">
               <p>
@@ -1064,6 +1062,7 @@
                   <button type="button" class="btn btn-primary" onclick="boardDelete(${response.id})" style="font-size: 12px;">게시물 삭제</button>
                 </div>
                 <p style="color:black;"> Q&A 카테고리: [${response.questionCategory}]</p>
+                <p style="color:black;"> 채택시 포인트: [${response.prizePoint}]</p>
                 <hr/>
                     <h3 class="card-title"> ${response.title}</h3>
 
@@ -1073,7 +1072,7 @@
                     <hr/>
                     <span id="writerNickname">${response.nickname}</span>
                     <span>  <--작성자 닉네임</span>
-
+                    <small class="text-muted">좋아요 ${response.boardLike}</small>
                   </div>
                 </div>`
               );
@@ -1085,6 +1084,7 @@
                     style="font-size: 10px !important; margin-left: 50%;">
                 </div>
                     <p style="color:black;"> Q&A 카테고리: [${response.questionCategory}]</p>
+                    <p style="color:black;"> 채택시 포인트: [${response.prizePoint}]</p>
                 <hr/>
                     <h3 class="card-title">${response.title}</h3>
 

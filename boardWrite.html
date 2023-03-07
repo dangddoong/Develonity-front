@@ -426,6 +426,10 @@
         const dtoTitle = $("#dtoTitle").val();
         const dtoContent = $("#dtoContent").val();
         const dtoPoint = parseInt($("#dtoPoint").val());
+        if (dtoPoint < 10) {
+          alert("최소 10포인트 이상 걸어주셔야합니다..");
+          return;
+        }
 
         const json = JSON.stringify({
           title: dtoTitle,
