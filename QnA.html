@@ -92,10 +92,10 @@
       let questionCategory = "BACKEND";
       let pageChoice = 1;
       let sizeChoice = 5;
-      let isAscChoice = false;
+      let isAscChoice = "DESC";
       function reloadQuestions() {
         var settings = {
-          url: `http://52.79.252.88:8080/api/question-boards?page=${pageChoice}&size=${sizeChoice}&isAsc=${isAscChoice}&questionCategory=${questionCategory}`,
+          url: `http://52.79.252.88:8080/api/question-boards?page=${pageChoice}&size=${sizeChoice}&sortDirection=${isAscChoice}&questionCategory=${questionCategory}`,
           method: "GET",
           timeout: 0,
           headers: {
@@ -272,10 +272,10 @@
                       >
                         <a class="dropdown-item" href="#">작성일자 기준</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" onclick="isAscOnclick(false)"
+                        <a class="dropdown-item" onclick="isAscOnclick('DESC')"
                           >내림차순</a
                         >
-                        <a class="dropdown-item" onclick="isAscOnclick(true)"
+                        <a class="dropdown-item" onclick="isAscOnclick('ASC')"
                           >오름차순</a
                         >
                       </div>
